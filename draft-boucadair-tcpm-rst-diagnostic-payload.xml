@@ -10,7 +10,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload"
+<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload-02"
      ipr="trust200902">
   <front>
     <title abbrev="RST Diagnostic Payload">TCP RST Diagnostic Paylaod</title>
@@ -304,8 +304,8 @@
 
     <section anchor="ack" title="Acknowledgements">
       <t>The "diagnostic payload" name is inspired from Section 5.5.2 of <xref
-      target="RFC7252"></xref> in a discussion with Carsten Bormann in the
-      tcpm mailing list.</t>
+      target="RFC7252"></xref> that was cited by Carsten Bormann in the tcpm
+      mailing list.</t>
     </section>
   </middle>
 

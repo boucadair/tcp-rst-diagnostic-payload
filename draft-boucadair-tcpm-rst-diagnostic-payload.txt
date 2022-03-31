@@ -9,7 +9,7 @@ Expires: 2 October 2022
 
 
                        TCP RST Diagnostic Paylaod
-              draft-boucadair-tcpm-rst-diagnostic-payload
+             draft-boucadair-tcpm-rst-diagnostic-payload-02
 
 Abstract
 
@@ -354,8 +354,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 6.  Acknowledgements
 
    The "diagnostic payload" name is inspired from Section 5.5.2 of
-   [RFC7252] in a discussion with Carsten Bormann in the tcpm mailing
-   list.
+   [RFC7252] that was cited by Carsten Bormann in the tcpm mailing list.
 
 7.  References
 
@@ -385,6 +384,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
+
 
 
 
