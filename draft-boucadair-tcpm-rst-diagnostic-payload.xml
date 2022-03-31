@@ -99,10 +99,10 @@
       <t>This document makes use of the terms defined in Section 4 of <xref
       target="I-D.ietf-tcpm-rfc793bis"></xref>.</t>
 
-      <t>To ease readability, parameter names and their JSON types are, thus,
-      used in the examples rather than their Concise Binary Object
-      Representation (CBOR) <xref target="RFC8949"></xref> key values and CBOR
-      types in <xref target="map"></xref>.</t>
+      <t>To ease readability, parameter names and their JSON types are used in
+      the examples rather than their Concise Binary Object Representation
+      (CBOR) <xref target="RFC8949"></xref> key values and CBOR types in <xref
+      target="map"></xref>.</t>
     </section>
 
     <section anchor="new" title="RST Diagnostic Payload">
@@ -125,12 +125,12 @@
 
       <t>The description of these parameters is as follows: <list
           style="hanging">
-          <t hangText="reason-code:">This attribute takes a value from an
+          <t hangText="reason-code:">This parameter takes a value from an
           available registry such as the "TCP Failure Causes" registry (<xref
           target="reg"></xref>).</t>
 
           <t hangText="pen:">Includes a Private Enterprise Number <xref
-          target="Private-Enterprise-Numbers"></xref>. This attribute is
+          target="Private-Enterprise-Numbers"></xref>. This parameter is
           included when the reason code is not taken from the IANA-maintained
           registry (<xref target="reg"></xref>), but from a vendor-specific
           registry.</t>
@@ -141,7 +141,7 @@
           not yet registered or for application-specific codes.</t>
         </list></t>
 
-      <t>At least "reason-code" and "reason-description" attributes MUST be
+      <t>At least "reason-code" and "reason-description" parameters MUST be
       included in an RST diagnostic payload. It is RECOMMENDED to omit "pen"
       if a reason code from the IANA-maintained registry (<xref
       target="reg"></xref>) fits the reset case.</t>

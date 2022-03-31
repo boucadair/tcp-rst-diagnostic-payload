@@ -133,10 +133,9 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    This document makes use of the terms defined in Section 4 of
    [I-D.ietf-tcpm-rfc793bis].
 
-   To ease readability, parameter names and their JSON types are, thus,
-   used in the examples rather than their Concise Binary Object
-   Representation (CBOR) [RFC8949] key values and CBOR types in
-   Section 4.1.
+   To ease readability, parameter names and their JSON types are used in
+   the examples rather than their Concise Binary Object Representation
+   (CBOR) [RFC8949] key values and CBOR types in Section 4.1.
 
 3.  RST Diagnostic Payload
 
@@ -159,9 +158,10 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
    The description of these parameters is as follows:
 
-   reason-code:  This attribute takes a value from an available registry
+   reason-code:  This parameter takes a value from an available registry
       such as the "TCP Failure Causes" registry (Section 4.2).
 
+   pen:  Includes a Private Enterprise Number
 
 
 
@@ -170,8 +170,7 @@ Boucadair                Expires 2 October 2022                 [Page 3]
 Internet-Draft           RST Diagnostic Payload               March 2022
 
 
-   pen:  Includes a Private Enterprise Number
-      [Private-Enterprise-Numbers].  This attribute is included when the
+      [Private-Enterprise-Numbers].  This parameter is included when the
       reason code is not taken from the IANA-maintained registry
       (Section 4.2), but from a vendor-specific registry.
 
@@ -180,7 +179,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
       supplied.  This parameter is useful only for codes that are not
       yet registered or for application-specific codes.
 
-   At least "reason-code" and "reason-description" attributes MUST be
+   At least "reason-code" and "reason-description" parameters MUST be
    included in an RST diagnostic payload.  It is RECOMMENDED to omit
    "pen" if a reason code from the IANA-maintained registry
    (Section 4.2) fits the reset case.
@@ -218,6 +217,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    Figure 4 shows a JSON-encoded example of RST diagnostic payload that
    includes a free description to report a case that is not covered yet
    by the IANA-maintained registry (Section 4.2).
+
 
 
 
