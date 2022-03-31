@@ -303,7 +303,9 @@
     </section>
 
     <section anchor="ack" title="Acknowledgements">
-      <t>TBC.</t>
+      <t>The "diagnostic payload" name is inspired from Section 5.5.2 of <xref
+      target="RFC7252"></xref> in a discussion with Carsten Bormann in the
+      tcpm mailing list.</t>
     </section>
   </middle>
 
@@ -341,6 +343,8 @@
       <?rfc include='reference.RFC.6146'?>
 
       <?rfc include='reference.RFC.5612'?>
+
+      <?rfc include='reference.RFC.7252'?>
 
       <reference anchor="IANA-TCP"
                  target="https://www.iana.org/assignments/tcp-parameters/tcp- parameters.xhtml">

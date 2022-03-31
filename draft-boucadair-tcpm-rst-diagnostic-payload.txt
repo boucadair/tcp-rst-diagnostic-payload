@@ -353,7 +353,9 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 6.  Acknowledgements
 
-   TBC.
+   The "diagnostic payload" name is inspired from Section 5.5.2 of
+   [RFC7252] in a discussion with Carsten Bormann in the tcpm mailing
+   list.
 
 7.  References
 
@@ -383,8 +385,6 @@ Internet-Draft           RST Diagnostic Payload               March 2022
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
-
-
 
 
 
@@ -419,6 +419,11 @@ Internet-Draft           RST Diagnostic Payload               March 2022
               NATs (CGNs)", BCP 127, RFC 6888, DOI 10.17487/RFC6888,
               April 2013, <https://www.rfc-editor.org/info/rfc6888>.
 
+   [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
+              Application Protocol (CoAP)", RFC 7252,
+              DOI 10.17487/RFC7252, June 2014,
+              <https://www.rfc-editor.org/info/rfc7252>.
+
    [RFC7857]  Penno, R., Perreault, S., Boucadair, M., Ed., Sivakumar,
               S., and K. Naito, "Updates to Network Address Translation
               (NAT) Behavioral Requirements", BCP 127, RFC 7857,
@@ -432,11 +437,6 @@ Author's Address
    35000 Rennes
    France
    Email: mohamed.boucadair@orange.com
-
-
-
-
-
 
 
 
