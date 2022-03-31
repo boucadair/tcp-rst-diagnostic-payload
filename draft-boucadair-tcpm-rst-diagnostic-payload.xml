@@ -107,16 +107,16 @@
       parameters are defined: <list style="hanging">
           <t hangText="rc:">Stands for "Reason Code". This parameter takes a
           value from an available registry such as the "TCP Failure Causes"
-          registry (<xref target="reg"></xref>). </t>
+          registry (<xref target="reg"></xref>).</t>
 
           <t hangText="pen:">Includes a Private Enterprise Number <xref
           target="Private-Enterprise-Numbers"></xref>. This attribute is
           included when the reason code is not taken from the IANA-maintained
           registry (<xref target="reg"></xref>), but from a vendor-specific
-          registry. </t>
+          registry.</t>
 
           <t hangText="rd:">Stands for "Reason Description". It includes a
-          brief description of the reason code. This parameter SHOULD NOT be
+          brief description of the reset reason. This parameter SHOULD NOT be
           included if a reason code is supplied. This parameter is useful only
           for codes that are not yet registered or for application-specific
           codes.</t>
@@ -125,10 +125,10 @@
       <t>At least "rc" and "rd" parameters MUST be included in an RST
       diagnostic payload. It is RECOMMENDED to omit "pen" if a reason code
       from the IANA-maintained registry (<xref target="reg"></xref>) fits the
-      reset case. </t>
+      reset case.</t>
 
       <t>Malformed RST diagnostic payload messages MUST be silently ignored by
-      the receiver. </t>
+      the receiver.</t>
 
       <t>A peer that receives a valid diagnostic payload may pass that
       information to the local application in addition to the information

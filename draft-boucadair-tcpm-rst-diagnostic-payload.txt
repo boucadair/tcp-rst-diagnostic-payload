@@ -147,7 +147,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
       (Section 4.1), but from a vendor-specific registry.
 
    rd:  Stands for "Reason Description".  It includes a brief
-      description of the reason code.  This parameter SHOULD NOT be
+      description of the reset reason.  This parameter SHOULD NOT be
       included if a reason code is supplied.  This parameter is useful
       only for codes that are not yet registered or for application-
       specific codes.
