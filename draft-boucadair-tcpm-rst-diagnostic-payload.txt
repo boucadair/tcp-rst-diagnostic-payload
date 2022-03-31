@@ -64,13 +64,14 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  RST Diagnostic Payload  . . . . . . . . . . . . . . . . . . .   3
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-     4.1.  New Registry for TCP Failure Causes . . . . . . . . . . .   5
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+     4.1.  JSON Mapping Parameters to CBOR . . . . . . . . . . . . .   5
+     4.2.  New Registry for TCP Failure Causes . . . . . . . . . . .   6
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -103,9 +104,8 @@ Table of Contents
    that procedure to insert and validate an enclosed diagnostic payload
    is provided in Section 3.
 
-   The first version of the specification is meant to discuss the format
-   and the overall approach to ease maintaining the list of codes while
-   allowing for adding new codes as needed in the future and
+
+
 
 
 
@@ -114,10 +114,13 @@ Boucadair                Expires 2 October 2022                 [Page 2]
 Internet-Draft           RST Diagnostic Payload               March 2022
 
 
+   The first version of the specification is meant to discuss the format
+   and the overall approach to ease maintaining the list of codes while
+   allowing for adding new codes as needed in the future and
    accommodating any existing vendor-specific codes.  An initial version
    of error codes is available at Table 1.  However, the authoritative
    source to retrieve the full list of error codes is the IANA-
-   maintained registry Section 4.1.
+   maintained registry Section 4.2.
 
 2.  Terminology
 
@@ -130,37 +133,34 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    This document makes use of the terms defined in Section 4 of
    [I-D.ietf-tcpm-rfc793bis].
 
+   To ease readability, parameter names and their JSON types are, thus,
+   used in the examples rather than their Concise Binary Object
+   Representation (CBOR) [RFC8949] key values and CBOR types in
+   Section 4.1.
+
 3.  RST Diagnostic Payload
 
-   In order to unambiguously identify an RST diagnostic payload that is
-   compliant with the present specification, the payload MUST use the
-   I-JSON message format [RFC7493].  The following parameters are
-   defined:
+   The RST diagnostic payload MUST be encoded using CBOR) [RFC8949].
+   All parameters in the RST diagnostic payload are mapped to CBOR types
+   as specified in Section 4.1.  The Concise Data Definition Language
+   (CDDL) [RFC8610] for the diagnostic payload is as follows:
 
-   rc:  Stands for "Reason Code".  This parameter takes a value from an
-      available registry such as the "TCP Failure Causes" registry
-      (Section 4.1).
+                              diagnostic-payload = {
+                                magic-word: tstr,
+                                ? reason-code: uint,
+                                ? pen:uint,
+                                ? reason-description: tstr,
+                              }
 
-   pen:  Includes a Private Enterprise Number
-      [Private-Enterprise-Numbers].  This attribute is included when the
-      reason code is not taken from the IANA-maintained registry
-      (Section 4.1), but from a vendor-specific registry.
+             Figure 1: Structure of the RST Diagnostic Payload
 
-   rd:  Stands for "Reason Description".  It includes a brief
-      description of the reset reason.  This parameter SHOULD NOT be
-      included if a reason code is supplied.  This parameter is useful
-      only for codes that are not yet registered or for application-
-      specific codes.
+      NOTE: See if we need to add a magic word to unambigousily identify
+      an RST payload that follows this spec.
 
-   At least "rc" and "rd" parameters MUST be included in an RST
-   diagnostic payload.  It is RECOMMENDED to omit "pen" if a reason code
-   from the IANA-maintained registry (Section 4.1) fits the reset case.
+   The description of these parameters is as follows:
 
-   Malformed RST diagnostic payload messages MUST be silently ignored by
-   the receiver.
-
-
-
+   reason-code:  This attribute takes a value from an available registry
+      such as the "TCP Failure Causes" registry (Section 4.2).
 
 
 
@@ -170,54 +170,54 @@ Boucadair                Expires 2 October 2022                 [Page 3]
 Internet-Draft           RST Diagnostic Payload               March 2022
 
 
+   pen:  Includes a Private Enterprise Number
+      [Private-Enterprise-Numbers].  This attribute is included when the
+      reason code is not taken from the IANA-maintained registry
+      (Section 4.2), but from a vendor-specific registry.
+
+   reason-description:  It includes a brief description of the reset
+      reason.  This parameter SHOULD NOT be included if a reason code is
+      supplied.  This parameter is useful only for codes that are not
+      yet registered or for application-specific codes.
+
+   At least "reason-code" and "reason-description" attributes MUST be
+   included in an RST diagnostic payload.  It is RECOMMENDED to omit
+   "pen" if a reason code from the IANA-maintained registry
+   (Section 4.2) fits the reset case.
+
+   Malformed RST diagnostic payload messages MUST be silently ignored by
+   the receiver.
+
    A peer that receives a valid diagnostic payload may pass that
    information to the local application in addition to the information
    (MUST-12) described in Section 3.6 of [I-D.ietf-tcpm-rfc793bis].
    That information may also be logged locally, unless a local policy
    specifies otherwise.
 
-   Figure 1 depicts an example of an RST diagnostic payload that is
-   generated to inform the peer that the connection is reset because an
-   ACK was received while the connection is still in the LISTEN state.
+   Figure 2 depicts a JSON-encoded example of RST diagnostic payload
+   that is generated to inform the peer that the connection is reset
+   because an ACK was received while the connection is still in the
+   LISTEN state.
 
    {
-    "rc": 2
+    "reason-code": 2
    }
 
-            Figure 1: An RST Diagnostic Payload with Reason Code
+        Figure 2: An RST Diagnostic Payload with Reason Code (JSON)
 
-   Figure 2 shows an example of an RST diagnostic payload that includes
-   a free description to report a case that is not covered yet by the
-   IANA-maintained registry (Section 4.1).
+   The corresponding CBOR encoding format for the diagnostic payload is
+   depicted in Figure 3.
 
-   {
-    "rd": "brief human-readable description"
-   }
+   A1    # map(1)
+      01 # unsigned(1)
+      02 # unsigned(2)
 
-        Figure 2: An RST Diagnostic Payload with Reason Description
+    Figure 3: An RST Diagnostic Payload with Reason Code (CBOR Encoding)
 
-   An RST diagnostic payload may also be reset by an on-path service
-   function.  For example, the following diagnostic payload is returned
-   by a NAT uppon expiry of the mapping entry to which the TCP
-   connection is bound (Figure 3).
 
-   {
-    "rc": 8
-   }
-
-      Figure 3: An RST Diagnostic Payload to Report Connection Timeout
-
-   Figure 4 illustrates the example of an RST diagnostic payload that is
-   returned by a peer that resets a TCP connection for a reason code
-   1234 defined by a vendor with the private enterprise number 32473.
-
-   {
-    "rc": 1234
-    "pen": 32473
-   }
-
-       Figure 4: An RST Diagnostic Payload to Report Vendor-Specific
-                                Reason Code
+   Figure 4 shows a JSON-encoded example of RST diagnostic payload that
+   includes a free description to report a case that is not covered yet
+   by the IANA-maintained registry (Section 4.2).
 
 
 
@@ -226,13 +226,78 @@ Boucadair                Expires 2 October 2022                 [Page 4]
 Internet-Draft           RST Diagnostic Payload               March 2022
 
 
-   Figure 4 uses the Enterprise Number 32473 defined for documentation
+   {
+    "reason-description": "brief human-readable description"
+   }
+
+     Figure 4: An RST Diagnostic Payload with Reason Description (JSON)
+
+   An RST diagnostic payload may also be reset by an on-path service
+   function.  For example, the following diagnostic payload is returned
+   by a NAT upon expiry of the mapping entry to which the TCP connection
+   is bound (Figure 5).
+
+   {
+    "reason-code": 8
+   }
+
+      Figure 5: An RST Diagnostic Payload to Report Connection Timeout
+                                   (JSON)
+
+   Figure 6 illustrates the RST diagnostic payload that is returned by a
+   peer that resets a TCP connection for a reason code 1234 defined by a
+   vendor with the private enterprise number 32473.
+
+   {
+    "reason-code": 1234
+    "pen": 32473
+   }
+
+       Figure 6: An RST Diagnostic Payload to Report Vendor-Specific
+                             Reason Code (JSON)
+
+   Figure 6 uses the Enterprise Number 32473 defined for documentation
    use [RFC5612].
 
 4.  IANA Considerations
 
 
-4.1.  New Registry for TCP Failure Causes
+4.1.  JSON Mapping Parameters to CBOR
+
+   IANA is requested to create a new subregistry titled "RST Diagnostic
+   Payload CBOR Key Values" under the "Transmission Control Protocol
+   (TCP) Parameters" registry [IANA-TCP].
+
+   The structure of this subregistry and the initial values are provided
+   below:
+
+
+
+
+
+
+
+Boucadair                Expires 2 October 2022                 [Page 5]
+
+Internet-Draft           RST Diagnostic Payload               March 2022
+
+
+   +--------------------+------+---------------+--------+--------------+
+   | Parameter Name     | CBOR | CBOR Major    | JSON   | Reference    |
+   |                    | Key  |    Type &     | Type   |              |
+   |                    |      | Information   |        |              |
+   +====================+======+===============+========+==============+
+   | reason-code        |   1  | 0 unsigned    | Number |[ThisDocument]|
+   | pen                |   2  | 0 unsigned    | Number |[ThisDocument]|
+   | reason-description |   3  | 3 text string | String |[ThisDocument]|
+   +====================+======+===============+========+==============+
+
+   The key value MUST be an integer in the RANGE2.
+
+   The assignment policy for this registry is "IETF Review" (Section 4.8
+   of [RFC8126]).
+
+4.2.  New Registry for TCP Failure Causes
 
    This document requests IANA to create a new subregistry entitled "TCP
    Failure Causes" under the "Transmission Control Protocol (TCP)
@@ -268,16 +333,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 
 
-
-
-
-
-
-
-
-
-
-Boucadair                Expires 2 October 2022                 [Page 5]
+Boucadair                Expires 2 October 2022                 [Page 6]
 
 Internet-Draft           RST Diagnostic Payload               March 2022
 
@@ -318,10 +374,10 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    |       | functions such as             |                           |
    |       | translators.                  |                           |
    +-------+-------------------------------+---------------------------+
-   | 9     | Connection Timeout.This       | [ThisDocument]            |
-   |       | code can be used by           |                           |
-   |       | service functions such        |                           |
-   |       | as translators.               |                           |
+   | 9     | Connection Timeout.           | [ThisDocument]            |
+   |       | This code can be used         |                           |
+   |       | by service functions          |                           |
+   |       | such as translators.          |                           |
    +-------+-------------------------------+---------------------------+
 
                     Table 1: Initial TCP Failure Causes
@@ -333,7 +389,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 6]
+Boucadair                Expires 2 October 2022                 [Page 7]
 
 Internet-Draft           RST Diagnostic Payload               March 2022
 
@@ -353,7 +409,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 6.  Acknowledgements
 
-   The "diagnostic payload" name is inspired from Section 5.5.2 of
+   The "diagnostic payload" name is inspired by Section 5.5.2 of
    [RFC7252] that was cited by Carsten Bormann in the tcpm mailing list.
 
 7.  References
@@ -376,27 +432,34 @@ Internet-Draft           RST Diagnostic Payload               March 2022
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC7493]  Bray, T., Ed., "The I-JSON Message Format", RFC 7493,
-              DOI 10.17487/RFC7493, March 2015,
-              <https://www.rfc-editor.org/info/rfc7493>.
-
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
 
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 7]
+
+Boucadair                Expires 2 October 2022                 [Page 8]
 
 Internet-Draft           RST Diagnostic Payload               March 2022
 
 
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+   [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
+              Definition Language (CDDL): A Notational Convention to
+              Express Concise Binary Object Representation (CBOR) and
+              JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
+              June 2019, <https://www.rfc-editor.org/info/rfc8610>.
+
+   [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
+              Representation (CBOR)", STD 94, RFC 8949,
+              DOI 10.17487/RFC8949, December 2020,
+              <https://www.rfc-editor.org/info/rfc8949>.
 
 7.2.  Informative References
 
@@ -432,6 +495,17 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 Author's Address
 
+
+
+
+
+
+
+Boucadair                Expires 2 October 2022                 [Page 9]
+
+Internet-Draft           RST Diagnostic Payload               March 2022
+
+
    Mohamed Boucadair
    Orange
    35000 Rennes
@@ -445,4 +519,42 @@ Author's Address
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Boucadair                Expires 2 October 2022                [Page 10]
