@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload"
+     ipr="trust200902">
+  <front>
+    <title abbrev="RST Diagnostic Payload">TCP RST Diagnostic Paylaod</title>
+
+    <author fullname="Mohamed Boucadair" initials="M." surname="Boucadair">
+      <organization>Orange</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <city>Rennes</city>
+
+          <region></region>
+
+          <code>35000</code>
+
+          <country>France</country>
+        </postal>
+
+        <email>mohamed.boucadair@orange.com</email>
+      </address>
+    </author>
+
+    <date />
+
+    <workgroup>tcpm</workgroup>
+
+    <abstract>
+      <t>This document specifies a diagnostic payload format to be returned in
+      TCP RST segments. Such payloads are used to share with the endpoints the
+      reasons for which a TCP connection has been reset. This is meant to ease
+      diagnostic and troubleshooting.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="introduction" title="Introduction">
+      <t>A TCP connection <xref target="I-D.ietf-tcpm-rfc793bis"></xref> can
+      be reset by a peer for various reasons, e.g., received data does not
+      correspond to an active connection. Also, a TCP connection can be reset
+      by an on-path service function (e.g., CGN <xref
+      target="RFC6888"></xref>, NAT64 <xref target="RFC6146"></xref>,
+      firewall) for several reasons. Typically, a NAT function can generate an
+      RST segment to notify the peers upon the expiry of the lifetime of the
+      corresponding mapping entry or because an RST segment was received from
+      a peer (Section 2.2 of <xref target="RFC7857"></xref>). A TCP connection
+      can also be closed by a user or an application at any time. However, the
+      peer that receives an RST segment does not have any hint about the
+      reason that led to terminating the connection. Likewise, the application
+      that relies upon such a TCP connection may not easily identify the
+      reason for a connection closure. Troubleshooting such events at the
+      remote side of the connection that receives the RST segment may not be
+      trivial.</t>
+
+      <t>This document fills this void by specifying a format of the
+      diagnostic payload that is returned in an RST segment. Returning such
+      data is consistent with the provision in Section 3.5.3 of <xref
+      target="I-D.ietf-tcpm-rfc793bis"></xref> for RST segments.</t>
+
+      <t>This document does not change the conditions under which an RST
+      segment is generated (Section 3.5.2 of <xref
+      target="I-D.ietf-tcpm-rfc793bis"></xref>).</t>
+
+      <t>The generic procedure for processing an RST segment is specified in
+      Section 3.5.3 of <xref target="I-D.ietf-tcpm-rfc793bis"></xref>. Only
+      the deviations from that procedure to insert and validate an enclosed
+      diagnostic payload is provided in <xref target="new"></xref>.</t>
+
+      <t>The first version of the specification is meant to discuss the format
+      and the overall approach to ease maintaining the list of codes while
+      allowing for adding new codes as needed in the future and accommodating
+      any existing vendor-specific codes. An initial version of error codes is
+      available at <xref target="initial"></xref>. However, the authoritative
+      source to retrieve the full list of error codes is the IANA-maintained
+      registry <xref target="reg"></xref>.</t>
+    </section>
+
+    <section anchor="notation" title="Terminology">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119"></xref><xref target="RFC8174"></xref> when, and
+      only when, they appear in all capitals, as shown here.</t>
+
+      <t>This document makes use of the terms defined in Section 4 of <xref
+      target="I-D.ietf-tcpm-rfc793bis"></xref>.</t>
+    </section>
+
+    <section anchor="new" title="RST Diagnostic Payload">
+      <t>In order to unambiguously identify an RST diagnostic payload that is
+      compliant with the present specification, the payload MUST use the
+      I-JSON message format <xref target="RFC7493"></xref>. The following
+      parameters are defined: <list style="hanging">
+          <t hangText="rc:">Stands for "Reason Code". This parameter takes a
+          value from an available registry such as the "TCP Failure Causes"
+          registry (<xref target="reg"></xref>). </t>
+
+          <t hangText="pen:">Includes a Private Enterprise Number <xref
+          target="Private-Enterprise-Numbers"></xref>. This attribute is
+          included when the reason code is not taken from the IANA-maintained
+          registry (<xref target="reg"></xref>), but from a vendor-specific
+          registry. </t>
+
+          <t hangText="rd:">Stands for "Reason Description". It includes a
+          brief description of the reason code. This parameter SHOULD NOT be
+          included if a reason code is supplied. This parameter is useful only
+          for codes that are not yet registered or for application-specific
+          codes.</t>
+        </list></t>
+
+      <t>At least "rc" and "rd" parameters MUST be included in an RST
+      diagnostic payload. It is RECOMMENDED to omit "pen" if a reason code
+      from the IANA-maintained registry (<xref target="reg"></xref>) fits the
+      reset case. </t>
+
+      <t>Malformed RST diagnostic payload messages MUST be silently ignored by
+      the receiver. </t>
+
+      <t>A peer that receives a valid diagnostic payload may pass that
+      information to the local application in addition to the information
+      (MUST-12) described in Section 3.6 of <xref
+      target="I-D.ietf-tcpm-rfc793bis"></xref>. That information may also be
+      logged locally, unless a local policy specifies otherwise.</t>
+
+      <t><xref target="ex1"></xref> depicts an example of an RST diagnostic
+      payload that is generated to inform the peer that the connection is
+      reset because an ACK was received while the connection is still in the
+      LISTEN state.</t>
+
+      <t><figure anchor="ex1"
+          title="An RST Diagnostic Payload with Reason Code">
+          <artwork><![CDATA[{
+ "rc": 2
+}
+]]></artwork>
+        </figure></t>
+
+      <t><xref target="ex2"></xref> shows an example of an RST diagnostic
+      payload that includes a free description to report a case that is not
+      covered yet by the IANA-maintained registry (<xref
+      target="reg"></xref>).</t>
+
+      <t><figure anchor="ex2"
+          title="An RST Diagnostic Payload with Reason Description">
+          <artwork><![CDATA[{
+ "rd": "brief human-readable description"
+}
+]]></artwork>
+        </figure></t>
+
+      <t>An RST diagnostic payload may also be reset by an on-path service
+      function. For example, the following diagnostic payload is returned by a
+      NAT uppon expiry of the mapping entry to which the TCP connection is
+      bound (<xref target="ex3"></xref>).</t>
+
+      <t><figure anchor="ex3"
+          title="An RST Diagnostic Payload to Report Connection Timeout">
+          <artwork><![CDATA[{
+ "rc": 8
+}
+]]></artwork>
+        </figure></t>
+
+      <t><xref target="ex4"></xref> illustrates the example of an RST
+      diagnostic payload that is returned by a peer that resets a TCP
+      connection for a reason code 1234 defined by a vendor with the private
+      enterprise number 32473.</t>
+
+      <t><figure anchor="ex4"
+          title="An RST Diagnostic Payload to Report Vendor-Specific Reason Code">
+          <artwork><![CDATA[{
+ "rc": 1234
+ "pen": 32473
+}
+]]></artwork>
+        </figure></t>
+
+      <t><xref target="ex4"></xref> uses the Enterprise Number 32473 defined
+      for documentation use <xref target="RFC5612"></xref>.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t></t>
+
+      <section anchor="reg" title="New Registry for TCP Failure Causes">
+        <t>This document requests IANA to create a new subregistry entitled
+        "TCP Failure Causes" under the "Transmission Control Protocol (TCP)
+        Parameters" registry <xref target="IANA-TCP"></xref>.</t>
+
+        <t>Values are taken from RANGE.</t>
+
+        <t>The assignment policy for this registry is "Expert Review" (Section
+        4.5 of <xref target="RFC8126"></xref>).</t>
+
+        <t>The designated experts may approve registration once they checked
+        that the new requested code is not covered by an existing code and if
+        the provided reasoning to register the new code is acceptable. A
+        registration request may supply a pointer to a specification where
+        that code is defined. However, a registration may be accepted even if
+        no permanent and readily available public specification is
+        available.</t>
+
+        <t>The registry is initially populated with the following values:</t>
+
+        <texttable anchor="initial" title="Initial TCP Failure Causes">
+          <ttcol>Value</ttcol>
+
+          <ttcol>Description</ttcol>
+
+          <ttcol>Specification (if available)</ttcol>
+
+          <c>1</c>
+
+          <c>Data lost. New data is received after CLOSE is called</c>
+
+          <c>Sections 3.6.1 and 3.10.7.1 of <xref
+          target="I-D.ietf-tcpm-rfc793bis"></xref></c>
+
+          <c>2</c>
+
+          <c>Still in LISTEN. Received ACK while the connection still in the
+          LISTEN state</c>
+
+          <c>Section 3.10.7.2 of <xref
+          target="I-D.ietf-tcpm-rfc793bis"></xref></c>
+
+          <c>3</c>
+
+          <c>Malformed Message</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>4</c>
+
+          <c>Not Authorized</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>5</c>
+
+          <c>Resource Exceeded</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>6</c>
+
+          <c>Network Failure. This code can be used by service functions such
+          as translators.</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>7</c>
+
+          <c>Connection Reset received from the peer. This code can be used by
+          service functions such as translators.</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>8</c>
+
+          <c>Destination Unreachable. This code can be used by service
+          functions such as translators.</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>9</c>
+
+          <c>Connection Timeout.This code can be used by service functions
+          such as translators.</c>
+
+          <c>[ThisDocument]</c>
+        </texttable>
+
+        <t></t>
+      </section>
+    </section>
+
+    <section anchor="security" title="Security Considerations">
+      <t><xref target="I-D.ietf-tcpm-rfc793bis"></xref> discusses TCP-related
+      security considerations. RST-specific attacks and their mitigations are
+      discussed in Section 3.10.7.3 of <xref
+      target="I-D.ietf-tcpm-rfc793bis"></xref>.</t>
+
+      <t>In addition to these considerations, it is RECOMMENDED to control the
+      size of acceptable diagnostic payload and keep it as brief as possible.
+      Also, it is RECOMMENDED to avoid leaking privacy-related information as
+      part of the diagnostic payload (e.g., including a description such as
+      "user X resets explicitly the connection" is not recommended).</t>
+    </section>
+
+    <section anchor="ack" title="Acknowledgements">
+      <t>TBC.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include='reference.RFC.2119'?>
+
+      <?rfc include='reference.RFC.8174'?>
+
+      <?rfc include='reference.RFC.8126'?>
+
+      <?rfc include='reference.RFC.7493'?>
+
+      <?rfc include='reference.I-D.ietf-tcpm-rfc793bis'?>
+
+      <reference anchor="Private-Enterprise-Numbers"
+                 target="https://www.iana.org/assignments/enterprise-numbers">
+        <front>
+          <title>Private Enterprise Numbers</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="04" month="May" year="2020" />
+        </front>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.6888'?>
+
+      <?rfc include='reference.RFC.7857'?>
+
+      <?rfc include='reference.RFC.6146'?>
+
+      <?rfc include='reference.RFC.5612'?>
+
+      <reference anchor="IANA-TCP"
+                 target="https://www.iana.org/assignments/tcp-parameters/tcp- parameters.xhtml">
+        <front>
+          <title>Transmission Control Protocol (TCP) Parameters</title>
+
+          <author>
+            <organization>IANA YANG</organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>
