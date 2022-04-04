@@ -78,7 +78,9 @@
       <t>The generic procedure for processing an RST segment is specified in
       Section 3.5.3 of <xref target="I-D.ietf-tcpm-rfc793bis"></xref>. Only
       the deviations from that procedure to insert and validate an enclosed
-      diagnostic payload is provided in <xref target="new"></xref>.</t>
+      diagnostic payload is provided in <xref target="new"></xref>. <xref
+      target="examples"></xref> provides a set of examples to illustrate the
+      use of TCP RST diagnostic payloads.</t>
 
       <t>This document specifies the format and the overall approach to ease
       maintaining the list of codes while allowing for adding new codes as
@@ -145,8 +147,8 @@
 
           <t hangText="reason-description:">It includes a brief description of
           the reset reason. This parameter SHOULD NOT be included if a reason
-          code is supplied. This parameter is useful only for codes that are
-          not yet registered or for application-specific codes.</t>
+          code is supplied. This parameter is useful only for reset reasons
+          that are not yet registered or for application-specific reasons.</t>
         </list></t>
 
       <t>At least one of "reason-code" and "reason-description" parameters
@@ -162,14 +164,23 @@
       information (MUST-12) described in Section 3.6 of <xref
       target="I-D.ietf-tcpm-rfc793bis"></xref>. That information may also be
       logged locally, unless a local policy specifies otherwise. How the
-      information is passed to an application and how its stored locally is
+      information is passed to an application and how it is stored locally is
       implementation specific. </t>
+    </section>
+
+    <section anchor="examples" title="Some Examples">
+      <t>To ease readability, the CBOR diagnostic notation (Section 8 of <xref
+      target="RFC8949"></xref>) with the parameter names rather than their
+      CBOR key values in <xref target="map"></xref> is used in Figures <xref
+      format="counter" target="ex1"></xref>, <xref format="counter"
+      target="ex2"></xref>, <xref format="counter" target="ex3"></xref>, and
+      <xref format="counter" target="ex4"></xref>.</t>
 
       <t><xref target="ex1a"></xref> depicts an example of RST diagnostic
-      payload that is generated to inform the peer that the connection is
-      reset because an ACK was received while the connection is still in the
-      LISTEN state (Section 3.10.7.2 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref>). </t>
+      payload that is generated to inform the peer that the TCP connection is
+      reset because an ACK was received from that peer while the connection is
+      still in the LISTEN state (Section 3.10.7.2 of <xref
+      target="I-D.ietf-tcpm-rfc793bis"></xref>).</t>
 
       <t><figure anchor="ex1a"
           title="An RST Diagnostic Payload with Reason Code (CBOR Encoding)">
@@ -180,12 +191,9 @@ A1    # map(1)
 ]]></artwork>
         </figure></t>
 
-      <t>To ease readability, the CBOR diagnostic notation (Section 8 of <xref
-      target="RFC8949"></xref>) with the parameter names rather than their
-      CBOR key values in <xref target="map"></xref> is used in the remaining
-      parts of the document. <xref target="ex1a"></xref> depicts the RST
-      diagnostic payload shown in <xref target="ex1a"></xref> following the
-      such a notation.</t>
+      <t><xref target="ex1"></xref> depicts the same RST diagnostic payload as
+      the one shown in <xref target="ex1a"></xref> but following the
+      diagnostic notation. </t>
 
       <t><figure anchor="ex1"
           title="An RST Diagnostic Payload with Reason Code (Diagnostic Notation)">
