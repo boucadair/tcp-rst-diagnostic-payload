@@ -111,14 +111,15 @@
       follows:<figure title="Structure of the RST Diagnostic Payload">
           <artwork><![CDATA[   ; This defines an array, the elements of which are to be used
    ; in a CBOR Sequence:
-   diagnostic-payload = [12345, reason]
-   ; Reset season details:
+   diagnostic-payload = [magic-word, reason]
+   ; Magic word to identify a payload that follows this specification
+   magic-word = 12345
+   ; Reset reason details:
    reason= {
      ? reason-code: uint,
      ? pen:uint, 
      ? reason-description: tstr,
    }
-
 ]]></artwork>
         </figure></t>
 
@@ -188,13 +189,11 @@
 
       <figure anchor="ex1a"
               title="An RST Diagnostic Payload with Reason Code (CBOR Encoding)">
-        <artwork><![CDATA[# CBOR sequence with 2 elements
+        <artwork><![CDATA[# CBOR sequence with two elements
 19 3039 # unsigned(12345)
-A2    # map(2)
+A1    # map(1)
    01 # unsigned(1)
    02 # unsigned(2)
-   02 # unsigned(2)
-   01 # unsigned(1)
 ]]></artwork>
       </figure>
 
