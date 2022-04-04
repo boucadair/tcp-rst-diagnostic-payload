@@ -4,8 +4,8 @@
 
 tcpm                                                        M. Boucadair
 Internet-Draft                                                    Orange
-Intended status: Standards Track                           31 March 2022
-Expires: 2 October 2022
+Intended status: Standards Track                            4 April 2022
+Expires: 6 October 2022
 
 
                        TCP RST Diagnostic Payload
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 October 2022.
+   This Internet-Draft will expire on 6 October 2022.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 1]
+Boucadair                Expires 6 October 2022                 [Page 1]
 
-Internet-Draft           RST Diagnostic Payload               March 2022
+Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 Table of Contents
@@ -63,15 +63,15 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  RST Diagnostic Payload  . . . . . . . . . . . . . . . . . . .   3
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-     4.1.  JSON Mapping Parameters to CBOR . . . . . . . . . . . . .   5
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+     4.1.  RST Diagnostic Payload CBOR Key Values  . . . . . . . . .   6
      4.2.  New Registry for TCP Failure Causes . . . . . . . . . . .   6
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   9
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 2]
+Boucadair                Expires 6 October 2022                 [Page 2]
 
-Internet-Draft           RST Diagnostic Payload               March 2022
+Internet-Draft           RST Diagnostic Payload               April 2022
 
 
    The first version of the specification is meant to discuss the format
@@ -133,28 +133,45 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    This document makes use of the terms defined in Section 4 of
    [I-D.ietf-tcpm-rfc793bis].
 
-   To ease readability, parameter names and their JSON types are used in
-   the examples rather than their Concise Binary Object Representation
-   (CBOR) [RFC8949] key values and CBOR types in Section 4.1.
+   To ease readability, parameter names are used in the examples rather
+   than their Concise Binary Object Representation (CBOR) [RFC8949] key
+   values in Section 4.1.
 
 3.  RST Diagnostic Payload
 
-   The RST diagnostic payload MUST be encoded using CBOR [RFC8949].  All
-   parameters in the RST diagnostic payload are mapped to CBOR types as
-   specified in Section 4.1.  The Concise Data Definition Language
-   (CDDL) [RFC8610] for the diagnostic payload is as follows:
+   The RST diagnostic payload MUST be encoded using CBOR Sequence
+   [RFC8742].  The Concise Data Definition Language (CDDL) [RFC8610] for
+   the diagnostic payload is as follows:
 
-                              diagnostic-payload = {
-                                magic-word: tstr,
-                                ? reason-code: uint,
-                                ? pen:uint,
-                                ? reason-description: tstr,
-                              }
+      ; This defines an array, the elements of which are to be used
+      ; in a CBOR Sequence:
+      diagnostic-payload = [12345, reason]
+      ; Reset season details:
+      reason= {
+        ? reason-code: uint,
+        ? pen:uint,
+        ? reason-description: tstr,
+      }
 
              Figure 1: Structure of the RST Diagnostic Payload
 
-      NOTE: See if we need to add a magic word to unambiguously identify
-      an RST payload that follows this spec.
+   The RST diagnostic payload comprises a magic word that is used to
+   unambiguously identify an RST payload that follows this
+   specification.  It MUST be set to the RFC number to be assigned to
+   this document.
+
+      Note to the RFC Editor: Please replace "12345" in the examples
+      with the RFC number assigned to this document.
+
+
+
+Boucadair                Expires 6 October 2022                 [Page 3]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
+   All parameters in the reason component of an RST diagnostic payload
+   are mapped to CBOR key values as specified in Section 4.1.
 
    The description of these parameters is as follows:
 
@@ -162,14 +179,6 @@ Internet-Draft           RST Diagnostic Payload               March 2022
       such as the "TCP Failure Causes" registry (Section 4.2).
 
    pen:  Includes a Private Enterprise Number
-
-
-
-Boucadair                Expires 2 October 2022                 [Page 3]
-
-Internet-Draft           RST Diagnostic Payload               March 2022
-
-
       [Private-Enterprise-Numbers].  This parameter is included when the
       reason code is not taken from the IANA-maintained registry
       (Section 4.2), but from a vendor-specific registry.
@@ -179,82 +188,110 @@ Internet-Draft           RST Diagnostic Payload               March 2022
       supplied.  This parameter is useful only for codes that are not
       yet registered or for application-specific codes.
 
-   At least "reason-code" and "reason-description" parameters MUST be
-   included in an RST diagnostic payload.  It is RECOMMENDED to omit
-   "pen" if a reason code from the IANA-maintained registry
+   At least one of "reason-code" and "reason-description" parameters
+   MUST be included in an RST diagnostic payload.  It is RECOMMENDED to
+   omit "pen" if a reason code from the IANA-maintained registry
    (Section 4.2) fits the reset case.
 
-   Malformed RST diagnostic payload messages MUST be silently ignored by
-   the receiver.
+   Malformed RST diagnostic payload messages that includes the magic
+   number MUST be silently ignored by the receiver.
 
-   A peer that receives a valid diagnostic payload may pass that
-   information to the local application in addition to the information
-   (MUST-12) described in Section 3.6 of [I-D.ietf-tcpm-rfc793bis].
-   That information may also be logged locally, unless a local policy
-   specifies otherwise.
+   A peer that receives a valid diagnostic payload may pass the reset
+   reason information to the local application in addition to the
+   information (MUST-12) described in Section 3.6 of
+   [I-D.ietf-tcpm-rfc793bis].  That information may also be logged
+   locally, unless a local policy specifies otherwise.
 
-   Figure 2 depicts a JSON-encoded example of RST diagnostic payload
-   that is generated to inform the peer that the connection is reset
-   because an ACK was received while the connection is still in the
-   LISTEN state.
+   Figure 2 depicts an example of RST diagnostic payload that is
+   generated to inform the peer that the connection is reset because an
+   ACK was received while the connection is still in the LISTEN state.
+   This example uses the diagnostic notations in Section 2.
 
-   {
-    "reason-code": 2
-   }
+   [
+     12345,
+     {
+       "reason-code": 2
+     }
+   ]
 
-        Figure 2: An RST Diagnostic Payload with Reason Code (JSON)
+      Figure 2: An RST Diagnostic Payload with Reason Code (Diagnostic
+                                 Notation)
 
-   The corresponding CBOR encoding format for the diagnostic payload is
-   depicted in Figure 3.
 
-   A1    # map(1)
+
+
+
+Boucadair                Expires 6 October 2022                 [Page 4]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
+   The corresponding CBOR encoding format for the RST diagnostic payload
+   is depicted in Figure 3.
+
+   # CBOR sequence with 2 elements
+   19 3039 # unsigned(12345)
+   A2    # map(2)
       01 # unsigned(1)
       02 # unsigned(2)
+      02 # unsigned(2)
+      01 # unsigned(1)
 
     Figure 3: An RST Diagnostic Payload with Reason Code (CBOR Encoding)
 
 
-   Figure 4 shows a JSON-encoded example of RST diagnostic payload that
-   includes a free description to report a case that is not covered yet
-   by the IANA-maintained registry (Section 4.2).
+   Figure 4 shows an example of RST diagnostic payload that includes a
+   free description to report a case that is not covered yet by the
+   IANA-maintained registry (Section 4.2).
 
+   [
+     12345,
+     {
+       "reason-description": "brief human-readable description"
+     }
+   ]
 
-
-
-Boucadair                Expires 2 October 2022                 [Page 4]
-
-Internet-Draft           RST Diagnostic Payload               March 2022
-
-
-   {
-    "reason-description": "brief human-readable description"
-   }
-
-     Figure 4: An RST Diagnostic Payload with Reason Description (JSON)
+        Figure 4: An RST Diagnostic Payload with Reason Description
+                           (Diagnostic Notation)
 
    An RST diagnostic payload may also be reset by an on-path service
    function.  For example, the following diagnostic payload is returned
    by a NAT upon expiry of the mapping entry to which the TCP connection
    is bound (Figure 5).
 
-   {
-    "reason-code": 8
-   }
+   [
+     12345,
+     {
+       "reason-code": 8
+     }
+   ]
 
       Figure 5: An RST Diagnostic Payload to Report Connection Timeout
-                                   (JSON)
+                           (Diagnostic Notation)
 
    Figure 6 illustrates the RST diagnostic payload that is returned by a
    peer that resets a TCP connection for a reason code 1234 defined by a
    vendor with the private enterprise number 32473.
 
-   {
-    "reason-code": 1234
-    "pen": 32473
-   }
+
+
+
+
+Boucadair                Expires 6 October 2022                 [Page 5]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
+   [
+     12345,
+     {
+       "reason-code": 1234,
+       "pen": 32473
+     }
+   ]
 
        Figure 6: An RST Diagnostic Payload to Report Vendor-Specific
-                             Reason Code (JSON)
+                     Reason Code (Diagnostic Notation)
 
    Figure 6 uses the Enterprise Number 32473 defined for documentation
    use [RFC5612].
@@ -262,7 +299,7 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 4.  IANA Considerations
 
 
-4.1.  JSON Mapping Parameters to CBOR
+4.1.  RST Diagnostic Payload CBOR Key Values
 
    IANA is requested to create a new subregistry titled "RST Diagnostic
    Payload CBOR Key Values" under the "Transmission Control Protocol
@@ -271,28 +308,17 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    The structure of this subregistry and the initial values are provided
    below:
 
+       +--------------------+------+---------------+--------------+
+       | Parameter Name     | CBOR | CBOR Major    | Reference    |
+       |                    | Key  |    Type &     |              |
+       |                    |      | Information   |              |
+       +====================+======+===============+==============+
+       | reason-code        |   1  | 0 unsigned    |[ThisDocument]|
+       | pen                |   2  | 0 unsigned    |[ThisDocument]|
+       | reason-description |   3  | 3 text string |[ThisDocument]|
+       +====================+======+===============+==============+
 
-
-
-
-
-
-Boucadair                Expires 2 October 2022                 [Page 5]
-
-Internet-Draft           RST Diagnostic Payload               March 2022
-
-
-   +--------------------+------+---------------+--------+--------------+
-   | Parameter Name     | CBOR | CBOR Major    | JSON   | Reference    |
-   |                    | Key  |    Type &     | Type   |              |
-   |                    |      | Information   |        |              |
-   +====================+======+===============+========+==============+
-   | reason-code        |   1  | 0 unsigned    | Number |[ThisDocument]|
-   | pen                |   2  | 0 unsigned    | Number |[ThisDocument]|
-   | reason-description |   3  | 3 text string | String |[ThisDocument]|
-   +====================+======+===============+========+==============+
-
-   The key value MUST be an integer in the RANGE2.
+   The key value MUST be an integer in the 1-255 range.
 
    The assignment policy for this registry is "IETF Review" (Section 4.8
    of [RFC8126]).
@@ -303,7 +329,14 @@ Internet-Draft           RST Diagnostic Payload               March 2022
    Failure Causes" under the "Transmission Control Protocol (TCP)
    Parameters" registry [IANA-TCP].
 
-   Values are taken from RANGE.
+   Values are taken from RANGE2.
+
+
+
+Boucadair                Expires 6 October 2022                 [Page 6]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
 
    The assignment policy for this registry is "Expert Review"
    (Section 4.5 of [RFC8126]).
@@ -333,9 +366,32 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 6]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Boucadair                Expires 6 October 2022                 [Page 7]
 
-Internet-Draft           RST Diagnostic Payload               March 2022
+Internet-Draft           RST Diagnostic Payload               April 2022
 
 
    +=======+===============================+===========================+
@@ -389,9 +445,9 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 
 
-Boucadair                Expires 2 October 2022                 [Page 7]
+Boucadair                Expires 6 October 2022                 [Page 8]
 
-Internet-Draft           RST Diagnostic Payload               March 2022
+Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 5.  Security Considerations
@@ -411,6 +467,8 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
    The "diagnostic payload" name is inspired by Section 5.5.2 of
    [RFC7252] that was cited by Carsten Bormann in the tcpm mailing list.
+
+   Thanks to Jon Jon Shallow for the comments.
 
 7.  References
 
@@ -443,11 +501,9 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 
 
-
-
-Boucadair                Expires 2 October 2022                 [Page 8]
+Boucadair                Expires 6 October 2022                 [Page 9]
 
-Internet-Draft           RST Diagnostic Payload               March 2022
+Internet-Draft           RST Diagnostic Payload               April 2022
 
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
@@ -455,6 +511,10 @@ Internet-Draft           RST Diagnostic Payload               March 2022
               Express Concise Binary Object Representation (CBOR) and
               JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
               June 2019, <https://www.rfc-editor.org/info/rfc8610>.
+
+   [RFC8742]  Bormann, C., "Concise Binary Object Representation (CBOR)
+              Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,
+              <https://www.rfc-editor.org/info/rfc8742>.
 
    [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
@@ -493,18 +553,16 @@ Internet-Draft           RST Diagnostic Payload               March 2022
               DOI 10.17487/RFC7857, April 2016,
               <https://www.rfc-editor.org/info/rfc7857>.
 
-Author's Address
 
 
 
 
-
-
-
-Boucadair                Expires 2 October 2022                 [Page 9]
+Boucadair                Expires 6 October 2022                [Page 10]
 
-Internet-Draft           RST Diagnostic Payload               March 2022
+Internet-Draft           RST Diagnostic Payload               April 2022
 
+
+Author's Address
 
    Mohamed Boucadair
    Orange
@@ -555,6 +613,4 @@ Internet-Draft           RST Diagnostic Payload               March 2022
 
 
 
-
-
-Boucadair                Expires 2 October 2022                [Page 10]
+Boucadair                Expires 6 October 2022                [Page 11]

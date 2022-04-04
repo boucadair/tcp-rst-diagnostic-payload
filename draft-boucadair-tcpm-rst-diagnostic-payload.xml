@@ -99,29 +99,40 @@
       <t>This document makes use of the terms defined in Section 4 of <xref
       target="I-D.ietf-tcpm-rfc793bis"></xref>.</t>
 
-      <t>To ease readability, parameter names and their JSON types are used in
-      the examples rather than their Concise Binary Object Representation
-      (CBOR) <xref target="RFC8949"></xref> key values and CBOR types in <xref
-      target="map"></xref>.</t>
+      <t>To ease readability, parameter names are used in the examples rather
+      than their Concise Binary Object Representation (CBOR) <xref
+      target="RFC8949"></xref> key values in <xref target="map"></xref>.</t>
     </section>
 
     <section anchor="new" title="RST Diagnostic Payload">
-      <t>The RST diagnostic payload MUST be encoded using CBOR <xref
-      target="RFC8949"></xref>. All parameters in the RST diagnostic payload
-      are mapped to CBOR types as specified in <xref target="map"></xref>. The
-      Concise Data Definition Language (CDDL) <xref target="RFC8610"></xref>
-      for the diagnostic payload is as follows:<figure
-          title="Structure of the RST Diagnostic Payload">
-          <artwork><![CDATA[                           diagnostic-payload = {
-                             magic-word: tstr,
-                             ? reason-code: uint,
-                             ? pen:uint, 
-                             ? reason-description: tstr,
-                           }]]></artwork>
-        </figure><list style="empty">
-          <t>NOTE: See if we need to add a magic word to unambiguously
-          identify an RST payload that follows this spec. </t>
+      <t>The RST diagnostic payload MUST be encoded using CBOR Sequence <xref
+      target="RFC8742"></xref>. The Concise Data Definition Language (CDDL)
+      <xref target="RFC8610"></xref> for the diagnostic payload is as
+      follows:<figure title="Structure of the RST Diagnostic Payload">
+          <artwork><![CDATA[   ; This defines an array, the elements of which are to be used
+   ; in a CBOR Sequence:
+   diagnostic-payload = [12345, reason]
+   ; Reset season details:
+   reason= {
+     ? reason-code: uint,
+     ? pen:uint, 
+     ? reason-description: tstr,
+   }
+
+]]></artwork>
+        </figure></t>
+
+      <t>The RST diagnostic payload comprises a magic word that is used to
+      unambiguously identify an RST payload that follows this specification.
+      It MUST be set to the RFC number to be assigned to this document. <list
+          style="empty">
+          <t>Note to the RFC Editor: Please replace "12345" in the examples
+          with the RFC number assigned to this document.</t>
         </list></t>
+
+      <t>All parameters in the reason component of an RST diagnostic payload
+      are mapped to CBOR key values as specified in <xref
+      target="map"></xref>.</t>
 
       <t>The description of these parameters is as follows: <list
           style="hanging">
@@ -141,56 +152,66 @@
           not yet registered or for application-specific codes.</t>
         </list></t>
 
-      <t>At least "reason-code" and "reason-description" parameters MUST be
-      included in an RST diagnostic payload. It is RECOMMENDED to omit "pen"
-      if a reason code from the IANA-maintained registry (<xref
+      <t>At least one of "reason-code" and "reason-description" parameters
+      MUST be included in an RST diagnostic payload. It is RECOMMENDED to omit
+      "pen" if a reason code from the IANA-maintained registry (<xref
       target="reg"></xref>) fits the reset case.</t>
 
-      <t>Malformed RST diagnostic payload messages MUST be silently ignored by
-      the receiver.</t>
+      <t>Malformed RST diagnostic payload messages that includes the magic
+      number MUST be silently ignored by the receiver.</t>
 
-      <t>A peer that receives a valid diagnostic payload may pass that
-      information to the local application in addition to the information
-      (MUST-12) described in Section 3.6 of <xref
+      <t>A peer that receives a valid diagnostic payload may pass the reset
+      reason information to the local application in addition to the
+      information (MUST-12) described in Section 3.6 of <xref
       target="I-D.ietf-tcpm-rfc793bis"></xref>. That information may also be
       logged locally, unless a local policy specifies otherwise.</t>
 
-      <t><xref target="ex1"></xref> depicts a JSON-encoded example of RST
-      diagnostic payload that is generated to inform the peer that the
-      connection is reset because an ACK was received while the connection is
-      still in the LISTEN state.</t>
+      <t><xref target="ex1"></xref> depicts an example of RST diagnostic
+      payload that is generated to inform the peer that the connection is
+      reset because an ACK was received while the connection is still in the
+      LISTEN state. This example uses the diagnostic notations in <xref
+      target="notation"></xref>.</t>
 
       <t><figure anchor="ex1"
-          title="An RST Diagnostic Payload with Reason Code (JSON)">
-          <artwork><![CDATA[{
- "reason-code": 2
-}
+          title="An RST Diagnostic Payload with Reason Code (Diagnostic Notation)">
+          <artwork><![CDATA[[
+  12345,
+  {
+    "reason-code": 2
+  }
+]
 ]]></artwork>
         </figure></t>
 
-      <t>The corresponding CBOR encoding format for the diagnostic payload is
-      depicted in <xref target="ex1a"></xref>.</t>
+      <t>The corresponding CBOR encoding format for the RST diagnostic payload
+      is depicted in <xref target="ex1a"></xref>.</t>
 
       <figure anchor="ex1a"
               title="An RST Diagnostic Payload with Reason Code (CBOR Encoding)">
-        <artwork><![CDATA[A1    # map(1)
+        <artwork><![CDATA[# CBOR sequence with 2 elements
+19 3039 # unsigned(12345)
+A2    # map(2)
    01 # unsigned(1)
    02 # unsigned(2)
+   02 # unsigned(2)
+   01 # unsigned(1)
 ]]></artwork>
       </figure>
 
       <t></t>
 
-      <t><xref target="ex2"></xref> shows a JSON-encoded example of RST
-      diagnostic payload that includes a free description to report a case
-      that is not covered yet by the IANA-maintained registry (<xref
-      target="reg"></xref>).</t>
+      <t><xref target="ex2"></xref> shows an example of RST diagnostic payload
+      that includes a free description to report a case that is not covered
+      yet by the IANA-maintained registry (<xref target="reg"></xref>).</t>
 
       <t><figure anchor="ex2"
-          title="An RST Diagnostic Payload with Reason Description (JSON)">
-          <artwork><![CDATA[{
- "reason-description": "brief human-readable description"
-}
+          title="An RST Diagnostic Payload with Reason Description (Diagnostic Notation)">
+          <artwork><![CDATA[[
+  12345,
+  {
+    "reason-description": "brief human-readable description"
+  }
+]
 ]]></artwork>
         </figure></t>
 
@@ -200,10 +221,13 @@
       bound (<xref target="ex3"></xref>).</t>
 
       <t><figure anchor="ex3"
-          title="An RST Diagnostic Payload to Report Connection Timeout (JSON)">
-          <artwork><![CDATA[{
- "reason-code": 8
-}
+          title="An RST Diagnostic Payload to Report Connection Timeout (Diagnostic Notation)">
+          <artwork><![CDATA[[
+  12345,
+  {
+    "reason-code": 8
+  }
+]
 ]]></artwork>
         </figure></t>
 
@@ -213,11 +237,14 @@
       32473.</t>
 
       <t><figure anchor="ex4"
-          title="An RST Diagnostic Payload to Report Vendor-Specific Reason Code (JSON)">
-          <artwork><![CDATA[{
- "reason-code": 1234
- "pen": 32473
-}
+          title="An RST Diagnostic Payload to Report Vendor-Specific Reason Code (Diagnostic Notation)">
+          <artwork><![CDATA[[
+  12345,
+  {
+    "reason-code": 1234,
+    "pen": 32473
+  }
+]
 ]]></artwork>
         </figure></t>
 
@@ -228,7 +255,7 @@
     <section anchor="IANA" title="IANA Considerations">
       <t></t>
 
-      <section anchor="map" title="JSON Mapping Parameters to CBOR">
+      <section anchor="map" title="RST Diagnostic Payload CBOR Key Values">
         <t>IANA is requested to create a new subregistry titled "RST
         Diagnostic Payload CBOR Key Values" under the "Transmission Control
         Protocol (TCP) Parameters" registry <xref
@@ -238,19 +265,19 @@
         provided below:</t>
 
         <t><figure align="center">
-            <artwork align="center"><![CDATA[+--------------------+------+---------------+--------+--------------+
-| Parameter Name     | CBOR | CBOR Major    | JSON   | Reference    |
-|                    | Key  |    Type &     | Type   |              |
-|                    |      | Information   |        |              |
-+====================+======+===============+========+==============+
-| reason-code        |   1  | 0 unsigned    | Number |[ThisDocument]|
-| pen                |   2  | 0 unsigned    | Number |[ThisDocument]|
-| reason-description |   3  | 3 text string | String |[ThisDocument]|
-+====================+======+===============+========+==============+
+            <artwork align="center"><![CDATA[+--------------------+------+---------------+--------------+
+| Parameter Name     | CBOR | CBOR Major    | Reference    |
+|                    | Key  |    Type &     |              |
+|                    |      | Information   |              |
++====================+======+===============+==============+
+| reason-code        |   1  | 0 unsigned    |[ThisDocument]|
+| pen                |   2  | 0 unsigned    |[ThisDocument]|
+| reason-description |   3  | 3 text string |[ThisDocument]|
++====================+======+===============+==============+
 ]]></artwork>
           </figure></t>
 
-        <t>The key value MUST be an integer in the RANGE2.</t>
+        <t>The key value MUST be an integer in the 1-255 range.</t>
 
         <t>The assignment policy for this registry is "IETF Review" (Section
         4.8 of <xref target="RFC8126"></xref>).</t>
@@ -261,7 +288,7 @@
         "TCP Failure Causes" under the "Transmission Control Protocol (TCP)
         Parameters" registry <xref target="IANA-TCP"></xref>.</t>
 
-        <t>Values are taken from RANGE.</t>
+        <t>Values are taken from RANGE2.</t>
 
         <t>The assignment policy for this registry is "Expert Review" (Section
         4.5 of <xref target="RFC8126"></xref>).</t>
@@ -366,6 +393,8 @@
       <t>The "diagnostic payload" name is inspired by Section 5.5.2 of <xref
       target="RFC7252"></xref> that was cited by Carsten Bormann in the tcpm
       mailing list.</t>
+
+      <t>Thanks to Jon Jon Shallow for the comments. </t>
     </section>
   </middle>
 
@@ -380,6 +409,8 @@
       <?rfc include='reference.RFC.8949'?>
 
       <?rfc include='reference.RFC.8610'?>
+
+      <?rfc include='reference.RFC.8742'?>
 
       <?rfc include='reference.I-D.ietf-tcpm-rfc793bis'?>
 
