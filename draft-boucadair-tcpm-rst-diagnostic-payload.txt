@@ -4,8 +4,8 @@
 
 tcpm                                                        M. Boucadair
 Internet-Draft                                                    Orange
-Intended status: Standards Track                            4 April 2022
-Expires: 6 October 2022
+Intended status: Standards Track                           12 April 2022
+Expires: 14 October 2022
 
 
                        TCP RST Diagnostic Payload
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 October 2022.
+   This Internet-Draft will expire on 14 October 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 1]
+Boucadair                Expires 14 October 2022                [Page 1]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 2]
+Boucadair                Expires 14 October 2022                [Page 2]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -165,7 +165,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 3]
+Boucadair                Expires 14 October 2022                [Page 3]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -221,7 +221,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 4]
+Boucadair                Expires 14 October 2022                [Page 4]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -277,7 +277,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 5]
+Boucadair                Expires 14 October 2022                [Page 5]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -333,7 +333,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 6]
+Boucadair                Expires 14 October 2022                [Page 6]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -389,7 +389,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 7]
+Boucadair                Expires 14 October 2022                [Page 7]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -445,7 +445,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 6 October 2022                 [Page 8]
+Boucadair                Expires 14 October 2022                [Page 8]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -462,6 +462,12 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    information as part of the diagnostic payload (e.g., including a
    description such as "user X resets explicitly the connection" is not
    recommended).
+
+   The presence of vendor-specific reason codes (Section 3) may be used
+   to fingerprint hosts.  Such a concern does not apply if the reason
+   codes are taken from the IANA-maintained registry.  Implementers are,
+   thus, encouraged to register new codes within IANA instead of
+   maintaining specific registries.
 
 7.  Acknowledgements
 
@@ -490,6 +496,16 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+
+
+Boucadair                Expires 14 October 2022                [Page 9]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -498,13 +514,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-Boucadair                Expires 6 October 2022                 [Page 9]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
@@ -542,6 +551,17 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               NATs (CGNs)", BCP 127, RFC 6888, DOI 10.17487/RFC6888,
               April 2013, <https://www.rfc-editor.org/info/rfc6888>.
 
+
+
+
+
+
+
+Boucadair                Expires 14 October 2022               [Page 10]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
@@ -552,15 +572,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               (NAT) Behavioral Requirements", BCP 127, RFC 7857,
               DOI 10.17487/RFC7857, April 2016,
               <https://www.rfc-editor.org/info/rfc7857>.
-
-
-
-
-
-Boucadair                Expires 6 October 2022                [Page 10]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
 
 Author's Address
 
@@ -602,15 +613,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Boucadair                Expires 6 October 2022                [Page 11]
+Boucadair                Expires 14 October 2022               [Page 11]

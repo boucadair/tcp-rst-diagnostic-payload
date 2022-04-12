@@ -165,7 +165,7 @@
       target="I-D.ietf-tcpm-rfc793bis"></xref>. That information may also be
       logged locally, unless a local policy specifies otherwise. How the
       information is passed to an application and how it is stored locally is
-      implementation specific. </t>
+      implementation specific.</t>
     </section>
 
     <section anchor="examples" title="Some Examples">
@@ -193,7 +193,7 @@ A1    # map(1)
 
       <t><xref target="ex1"></xref> depicts the same RST diagnostic payload as
       the one shown in <xref target="ex1a"></xref> but following the
-      diagnostic notation. </t>
+      diagnostic notation.</t>
 
       <t><figure anchor="ex1"
           title="An RST Diagnostic Payload with Reason Code (Diagnostic Notation)">
@@ -393,6 +393,12 @@ A1    # map(1)
       Also, it is RECOMMENDED to avoid leaking privacy-related information as
       part of the diagnostic payload (e.g., including a description such as
       "user X resets explicitly the connection" is not recommended).</t>
+
+      <t>The presence of vendor-specific reason codes (<xref
+      target="new"></xref>) may be used to fingerprint hosts. Such a concern
+      does not apply if the reason codes are taken from the IANA-maintained
+      registry. Implementers are, thus, encouraged to register new codes
+      within IANA instead of maintaining specific registries.</t>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
@@ -400,7 +406,7 @@ A1    # map(1)
       target="RFC7252"></xref> that was cited by Carsten Bormann in the tcpm
       mailing list.</t>
 
-      <t>Thanks to Jon Jon Shallow for the comments. </t>
+      <t>Thanks to Jon Jon Shallow for the comments.</t>
     </section>
   </middle>
 
