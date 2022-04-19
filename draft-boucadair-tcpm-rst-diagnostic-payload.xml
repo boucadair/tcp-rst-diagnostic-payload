@@ -10,7 +10,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload-02"
+<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload-04"
      ipr="trust200902">
   <front>
     <title abbrev="RST Diagnostic Payload">TCP RST Diagnostic Payload</title>
@@ -109,6 +109,8 @@
       target="initial"></xref>. However, the authoritative source to retrieve
       the full list of error codes is the IANA-maintained registry <xref
       target="reg"></xref>.</t>
+
+      <t>Unlike the approach </t>
     </section>
 
     <section anchor="notation" title="Terminology">
@@ -340,15 +342,15 @@ A1    # map(1)
 
           <c>1</c>
 
-          <c>Data lost. New data is received after CLOSE is called</c>
+          <c>New data is received after CLOSE is called</c>
 
           <c>Sections 3.6.1 and 3.10.7.1 of <xref
           target="I-D.ietf-tcpm-rfc793bis"></xref></c>
 
           <c>2</c>
 
-          <c>Still in LISTEN. Received ACK while the connection is still in
-          the LISTEN state</c>
+          <c>Received ACK while the connection is still in the LISTEN
+          state</c>
 
           <c>Section 3.10.7.2 of <xref
           target="I-D.ietf-tcpm-rfc793bis"></xref></c>
@@ -385,7 +387,7 @@ A1    # map(1)
 
           <c>8</c>
 
-          <c>Connection Reset received from the peer</c>
+          <c>Reset received from the peer</c>
 
           <c>[ThisDocument]</c>
 
@@ -400,9 +402,27 @@ A1    # map(1)
           <c>Connection Timeout. </c>
 
           <c>[ThisDocument]</c>
+
+          <c>11</c>
+
+          <c>Too much outstanding data</c>
+
+          <c>Section 3.6 of <xref target="RFC8684"></xref></c>
+
+          <c>12</c>
+
+          <c>Unacceptable performance</c>
+
+          <c>Section 3.6 of <xref target="RFC8684"></xref></c>
+
+          <c>12</c>
+
+          <c>Middlebox interference</c>
+
+          <c>Section 3.6 of <xref target="RFC8684"></xref></c>
         </texttable>
 
-        <t>Note that codes 5-10 can be used by service functions such as
+        <t>Note that codes 6-10 can be used by service functions such as
         translators.</t>
       </section>
     </section>
@@ -415,8 +435,8 @@ A1    # map(1)
 
       <t>In addition to these considerations, it is RECOMMENDED to control the
       size of acceptable diagnostic payload and keep it as brief as possible.
-      The RECOMMENDED acceptable maximum size of diagnostic payload is 255
-      octets. </t>
+      The RECOMMENDED acceptable maximum size of the RST diagnostic payload is
+      255 octets. </t>
 
       <t>Also, it is RECOMMENDED to avoid leaking privacy-related information
       as part of the diagnostic payload (e.g., including a description such as
@@ -432,7 +452,7 @@ A1    # map(1)
       within IANA instead of maintaining specific registries.</t>
 
       <t>The reason description, when present, is not intended to be displayed
-      to end users, but to be consumed by applications. Such description may
+      to end users, but to be consumed by applications. Such a description may
       carry a malicious message to mislead the end-user. </t>
     </section>
 
@@ -441,7 +461,7 @@ A1    # map(1)
       target="RFC7252"></xref> that was cited by Carsten Bormann in the tcpm
       mailing list.</t>
 
-      <t>Thanks to Jon Jon Shallow for the comments.</t>
+      <t>Thanks to Jon Shallow for the comments.</t>
     </section>
   </middle>
 
@@ -462,6 +482,8 @@ A1    # map(1)
       <?rfc include='reference.RFC.3629'?>
 
       <?rfc include='reference.I-D.ietf-tcpm-rfc793bis'?>
+
+      <?rfc include='reference.RFC.8684'?>
 
       <reference anchor="Private-Enterprise-Numbers"
                  target="https://www.iana.org/assignments/enterprise-numbers">

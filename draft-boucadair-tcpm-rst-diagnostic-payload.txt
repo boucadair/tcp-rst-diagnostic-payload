@@ -10,7 +10,7 @@ Expires: 21 October 2022                                          Akamai
 
 
                        TCP RST Diagnostic Payload
-             draft-boucadair-tcpm-rst-diagnostic-payload-02
+             draft-boucadair-tcpm-rst-diagnostic-payload-04
 
 Abstract
 
@@ -121,6 +121,8 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    However, the authoritative source to retrieve the full list of error
    codes is the IANA-maintained registry Section 5.2.
 
+   Unlike the approach
+
 2.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -160,8 +162,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
       Note to the RFC Editor: Please replace "12345" with the RFC number
       assigned to this document.
-
-
 
 
 
@@ -394,40 +394,47 @@ Boucadair & Reddy        Expires 21 October 2022                [Page 7]
 Internet-Draft           RST Diagnostic Payload               April 2022
 
 
-    +=======+=============================+===========================+
-    | Value | Description                 | Specification (if         |
-    |       |                             | available)                |
-    +=======+=============================+===========================+
-    | 1     | Data lost.  New data is     | Sections 3.6.1 and        |
-    |       | received after CLOSE is     | 3.10.7.1 of               |
-    |       | called                      | [I-D.ietf-tcpm-rfc793bis] |
-    +-------+-----------------------------+---------------------------+
-    | 2     | Still in LISTEN.  Received  | Section 3.10.7.2 of       |
-    |       | ACK while the connection is | [I-D.ietf-tcpm-rfc793bis] |
-    |       | still in the LISTEN state   |                           |
-    +-------+-----------------------------+---------------------------+
-    | 3     | Illegal Option              | Section 3.1 of            |
-    |       |                             | [I-D.ietf-tcpm-rfc793bis] |
-    +-------+-----------------------------+---------------------------+
-    | 4     | Malformed Message           | [ThisDocument]            |
-    +-------+-----------------------------+---------------------------+
-    | 5     | Not Authorized              | [ThisDocument]            |
-    +-------+-----------------------------+---------------------------+
-    | 6     | Resource Exceeded           | [ThisDocument]            |
-    +-------+-----------------------------+---------------------------+
-    | 7     | Network Failure             | [ThisDocument]            |
-    +-------+-----------------------------+---------------------------+
-    | 8     | Connection Reset received   | [ThisDocument]            |
-    |       | from the peer               |                           |
-    +-------+-----------------------------+---------------------------+
-    | 9     | Destination Unreachable     | [ThisDocument]            |
-    +-------+-----------------------------+---------------------------+
-    | 10    | Connection Timeout.         | [ThisDocument]            |
-    +-------+-----------------------------+---------------------------+
+     +=======+========================+==============================+
+     | Value | Description            | Specification (if available) |
+     +=======+========================+==============================+
+     | 1     | New data is received   | Sections 3.6.1 and 3.10.7.1  |
+     |       | after CLOSE is called  | of [I-D.ietf-tcpm-rfc793bis] |
+     +-------+------------------------+------------------------------+
+     | 2     | Received ACK while the | Section 3.10.7.2 of          |
+     |       | connection is still in | [I-D.ietf-tcpm-rfc793bis]    |
+     |       | the LISTEN state       |                              |
+     +-------+------------------------+------------------------------+
+     | 3     | Illegal Option         | Section 3.1 of               |
+     |       |                        | [I-D.ietf-tcpm-rfc793bis]    |
+     +-------+------------------------+------------------------------+
+     | 4     | Malformed Message      | [ThisDocument]               |
+     +-------+------------------------+------------------------------+
+     | 5     | Not Authorized         | [ThisDocument]               |
+     +-------+------------------------+------------------------------+
+     | 6     | Resource Exceeded      | [ThisDocument]               |
+     +-------+------------------------+------------------------------+
+     | 7     | Network Failure        | [ThisDocument]               |
+     +-------+------------------------+------------------------------+
+     | 8     | Reset received from    | [ThisDocument]               |
+     |       | the peer               |                              |
+     +-------+------------------------+------------------------------+
+     | 9     | Destination            | [ThisDocument]               |
+     |       | Unreachable            |                              |
+     +-------+------------------------+------------------------------+
+     | 10    | Connection Timeout.    | [ThisDocument]               |
+     +-------+------------------------+------------------------------+
+     | 11    | Too much outstanding   | Section 3.6 of [RFC8684]     |
+     |       | data                   |                              |
+     +-------+------------------------+------------------------------+
+     | 12    | Unacceptable           | Section 3.6 of [RFC8684]     |
+     |       | performance            |                              |
+     +-------+------------------------+------------------------------+
+     | 12    | Middlebox interference | Section 3.6 of [RFC8684]     |
+     +-------+------------------------+------------------------------+
 
                     Table 1: Initial TCP Failure Causes
 
-   Note that codes 5-10 can be used by service functions such as
+   Note that codes 6-10 can be used by service functions such as
    translators.
 
 6.  Security Considerations
@@ -436,19 +443,17 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    considerations.  RST-specific attacks and their mitigations are
    discussed in Section 3.10.7.3 of [I-D.ietf-tcpm-rfc793bis].
 
-   In addition to these considerations, it is RECOMMENDED to control the
-   size of acceptable diagnostic payload and keep it as brief as
-   possible.  The RECOMMENDED acceptable maximum size of diagnostic
-   payload is 255 octets.
-
-
-
 
 
 Boucadair & Reddy        Expires 21 October 2022                [Page 8]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
+
+   In addition to these considerations, it is RECOMMENDED to control the
+   size of acceptable diagnostic payload and keep it as brief as
+   possible.  The RECOMMENDED acceptable maximum size of the RST
+   diagnostic payload is 255 octets.
 
    Also, it is RECOMMENDED to avoid leaking privacy-related information
    as part of the diagnostic payload (e.g., including a description such
@@ -464,7 +469,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    maintaining specific registries.
 
    The reason description, when present, is not intended to be displayed
-   to end users, but to be consumed by applications.  Such description
+   to end users, but to be consumed by applications.  Such a description
    may carry a malicious message to mislead the end-user.
 
 7.  Acknowledgements
@@ -472,7 +477,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    The "diagnostic payload" name is inspired by Section 5.5.2 of
    [RFC7252] that was cited by Carsten Bormann in the tcpm mailing list.
 
-   Thanks to Jon Jon Shallow for the comments.
+   Thanks to Jon Shallow for the comments.
 
 8.  References
 
@@ -494,17 +499,16 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
-              10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
-              2003, <https://www.rfc-editor.org/info/rfc3629>.
-
-
 
 
 Boucadair & Reddy        Expires 21 October 2022                [Page 9]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
+
+   [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
+              10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
+              2003, <https://www.rfc-editor.org/info/rfc3629>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -520,6 +524,11 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               Express Concise Binary Object Representation (CBOR) and
               JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
               June 2019, <https://www.rfc-editor.org/info/rfc8610>.
+
+   [RFC8684]  Ford, A., Raiciu, C., Handley, M., Bonaventure, O., and C.
+              Paasch, "TCP Extensions for Multipath Operation with
+              Multiple Addresses", RFC 8684, DOI 10.17487/RFC8684, March
+              2020, <https://www.rfc-editor.org/info/rfc8684>.
 
    [RFC8742]  Bormann, C., "Concise Binary Object Representation (CBOR)
               Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,
@@ -546,21 +555,17 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               Clients to IPv4 Servers", RFC 6146, DOI 10.17487/RFC6146,
               April 2011, <https://www.rfc-editor.org/info/rfc6146>.
 
-   [RFC6888]  Perreault, S., Ed., Yamagata, I., Miyakawa, S., Nakagawa,
-              A., and H. Ashida, "Common Requirements for Carrier-Grade
-              NATs (CGNs)", BCP 127, RFC 6888, DOI 10.17487/RFC6888,
-              April 2013, <https://www.rfc-editor.org/info/rfc6888>.
-
-
-
-
-
 
 
 Boucadair & Reddy        Expires 21 October 2022               [Page 10]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
+
+   [RFC6888]  Perreault, S., Ed., Yamagata, I., Miyakawa, S., Nakagawa,
+              A., and H. Ashida, "Common Requirements for Carrier-Grade
+              NATs (CGNs)", BCP 127, RFC 6888, DOI 10.17487/RFC6888,
+              April 2013, <https://www.rfc-editor.org/info/rfc6888>.
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
@@ -589,11 +594,6 @@ Authors' Addresses
    Karnataka
    India
    Email: kondtir@gmail.com
-
-
-
-
-
 
 
 
