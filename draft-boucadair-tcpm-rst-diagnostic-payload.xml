@@ -35,6 +35,27 @@
       </address>
     </author>
 
+    <author fullname="Tirumaleswar Reddy" initials="T." role="editor"
+            surname="Reddy">
+      <organization>Akamai</organization>
+
+      <address>
+        <postal>
+          <street>Embassy Golf Link Business Park</street>
+
+          <city>Bangalore</city>
+
+          <region>Karnataka</region>
+
+          <code>560071</code>
+
+          <country>India</country>
+        </postal>
+
+        <email>kondtir@gmail.com</email>
+      </address>
+    </author>
+
     <date />
 
     <workgroup>tcpm</workgroup>
@@ -111,9 +132,9 @@
           title="Structure of the RST Diagnostic Payload">
           <artwork><![CDATA[   ; This defines an array, the elements of which are to be used
    ; in a CBOR Sequence:
-   diagnostic-payload = [magic-word, reason]
-   ; Magic word to identify a payload that follows this specification
-   magic-word = 12345
+   diagnostic-payload = [magic-cookie, reason]
+   ; Magic cookie to identify a payload that follows this specification
+   magic-cookie = 12345
    ; Reset reason details:
    reason= {
      ? reason-code: uint,
@@ -123,7 +144,7 @@
 ]]></artwork>
         </figure></t>
 
-      <t>The RST diagnostic payload comprises a magic word that is used to
+      <t>The RST diagnostic payload comprises a magic cookie that is used to
       unambiguously identify an RST payload that follows this specification.
       It MUST be set to the RFC number to be assigned to this document. <list
           style="empty">
@@ -146,18 +167,19 @@
           registry.</t>
 
           <t hangText="reason-description:">It includes a brief description of
-          the reset reason. This parameter SHOULD NOT be included if a reason
-          code is supplied. This parameter is useful only for reset reasons
-          that are not yet registered or for application-specific reasons.</t>
+          the reset reason encoded as UTF-8 <xref target="RFC3629"></xref>.
+          This parameter SHOULD NOT be included if a reason code is supplied.
+          This parameter is useful only for reset reasons that are not yet
+          registered or for application-specific reasons.</t>
         </list></t>
 
       <t>At least one of "reason-code" and "reason-description" parameters
-      MUST be included in an RST diagnostic payload. It is RECOMMENDED to omit
-      "pen" if a reason code from the IANA-maintained registry (<xref
+      MUST be included in an RST diagnostic payload. The "pen" parameter MUST
+      be omitted if a reason code from the IANA-maintained registry (<xref
       target="reg"></xref>) fits the reset case.</t>
 
       <t>Malformed RST diagnostic payload messages that include the magic
-      number MUST be silently ignored by the receiver.</t>
+      cookie MUST be silently ignored by the receiver.</t>
 
       <t>A peer that receives a valid diagnostic payload may pass the reset
       reason information to the local application in addition to the
@@ -221,7 +243,7 @@ A1    # map(1)
 ]]></artwork>
         </figure></t>
 
-      <t>An RST diagnostic payload may also be reset by an on-path service
+      <t>An RST diagnostic payload may also be sent by an on-path service
       function. For example, the following diagnostic payload is returned by a
       NAT upon expiry of the mapping entry to which the TCP connection is
       bound (<xref target="ex3"></xref>).</t>
@@ -325,60 +347,63 @@ A1    # map(1)
 
           <c>2</c>
 
-          <c>Still in LISTEN. Received ACK while the connection still in the
-          LISTEN state</c>
+          <c>Still in LISTEN. Received ACK while the connection is still in
+          the LISTEN state</c>
 
           <c>Section 3.10.7.2 of <xref
           target="I-D.ietf-tcpm-rfc793bis"></xref></c>
 
           <c>3</c>
 
-          <c>Malformed Message</c>
+          <c>Illegal Option</c>
 
-          <c>[ThisDocument]</c>
+          <c>Section 3.1 of <xref target="I-D.ietf-tcpm-rfc793bis"></xref></c>
 
           <c>4</c>
 
-          <c>Not Authorized</c>
+          <c>Malformed Message</c>
 
           <c>[ThisDocument]</c>
 
           <c>5</c>
 
-          <c>Resource Exceeded</c>
+          <c>Not Authorized</c>
 
           <c>[ThisDocument]</c>
 
           <c>6</c>
 
-          <c>Network Failure. This code can be used by service functions such
-          as translators.</c>
+          <c>Resource Exceeded</c>
 
           <c>[ThisDocument]</c>
 
           <c>7</c>
 
-          <c>Connection Reset received from the peer. This code can be used by
-          service functions such as translators.</c>
+          <c>Network Failure</c>
 
           <c>[ThisDocument]</c>
 
           <c>8</c>
 
-          <c>Destination Unreachable. This code can be used by service
-          functions such as translators.</c>
+          <c>Connection Reset received from the peer</c>
 
           <c>[ThisDocument]</c>
 
           <c>9</c>
 
-          <c>Connection Timeout. This code can be used by service functions
-          such as translators.</c>
+          <c>Destination Unreachable</c>
+
+          <c>[ThisDocument]</c>
+
+          <c>10</c>
+
+          <c>Connection Timeout. </c>
 
           <c>[ThisDocument]</c>
         </texttable>
 
-        <t></t>
+        <t>Note that codes 5-10 can be used by service functions such as
+        translators.</t>
       </section>
     </section>
 
@@ -423,6 +448,8 @@ A1    # map(1)
       <?rfc include='reference.RFC.8610'?>
 
       <?rfc include='reference.RFC.8742'?>
+
+      <?rfc include='reference.RFC.3629'?>
 
       <?rfc include='reference.I-D.ietf-tcpm-rfc793bis'?>
 

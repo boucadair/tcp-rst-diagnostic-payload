@@ -4,8 +4,9 @@
 
 tcpm                                                        M. Boucadair
 Internet-Draft                                                    Orange
-Intended status: Standards Track                           12 April 2022
-Expires: 14 October 2022
+Intended status: Standards Track                           T. Reddy, Ed.
+Expires: 21 October 2022                                          Akamai
+                                                           19 April 2022
 
 
                        TCP RST Diagnostic Payload
@@ -33,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 October 2022.
+   This Internet-Draft will expire on 21 October 2022.
 
 Copyright Notice
 
@@ -52,8 +53,7 @@ Copyright Notice
 
 
 
-
-Boucadair                Expires 14 October 2022                [Page 1]
+Boucadair & Reddy        Expires 21 October 2022                [Page 1]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -66,13 +66,13 @@ Table of Contents
    4.  Some Examples . . . . . . . . . . . . . . . . . . . . . . . .   4
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
      5.1.  RST Diagnostic Payload CBOR Key Values  . . . . . . . . .   6
-     5.2.  New Registry for TCP Failure Causes . . . . . . . . . . .   6
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+     5.2.  New Registry for TCP Failure Causes . . . . . . . . . . .   7
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
      8.2.  Informative References  . . . . . . . . . . . . . . . . .  10
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Boucadair                Expires 14 October 2022                [Page 2]
+Boucadair & Reddy        Expires 21 October 2022                [Page 2]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -139,21 +139,21 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    Definition Language (CDDL) [RFC8610] for the diagnostic payload is as
    follows:
 
-      ; This defines an array, the elements of which are to be used
-      ; in a CBOR Sequence:
-      diagnostic-payload = [magic-word, reason]
-      ; Magic word to identify a payload that follows this specification
-      magic-word = 12345
-      ; Reset reason details:
-      reason= {
-        ? reason-code: uint,
-        ? pen:uint,
-        ? reason-description: tstr,
-      }
+    ; This defines an array, the elements of which are to be used
+    ; in a CBOR Sequence:
+    diagnostic-payload = [magic-cookie, reason]
+    ; Magic cookie to identify a payload that follows this specification
+    magic-cookie = 12345
+    ; Reset reason details:
+    reason= {
+      ? reason-code: uint,
+      ? pen:uint,
+      ? reason-description: tstr,
+    }
 
-             Figure 1: Structure of the RST Diagnostic Payload
+           Figure 1: Structure of the RST Diagnostic Payload
 
-   The RST diagnostic payload comprises a magic word that is used to
+   The RST diagnostic payload comprises a magic cookie that is used to
    unambiguously identify an RST payload that follows this
    specification.  It MUST be set to the RFC number to be assigned to
    this document.
@@ -165,7 +165,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-Boucadair                Expires 14 October 2022                [Page 3]
+Boucadair & Reddy        Expires 21 October 2022                [Page 3]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
@@ -183,17 +183,18 @@ Internet-Draft           RST Diagnostic Payload               April 2022
       (Section 5.2), but from a vendor-specific registry.
 
    reason-description:  It includes a brief description of the reset
-      reason.  This parameter SHOULD NOT be included if a reason code is
-      supplied.  This parameter is useful only for reset reasons that
-      are not yet registered or for application-specific reasons.
+      reason encoded as UTF-8 [RFC3629].  This parameter SHOULD NOT be
+      included if a reason code is supplied.  This parameter is useful
+      only for reset reasons that are not yet registered or for
+      application-specific reasons.
 
    At least one of "reason-code" and "reason-description" parameters
-   MUST be included in an RST diagnostic payload.  It is RECOMMENDED to
-   omit "pen" if a reason code from the IANA-maintained registry
+   MUST be included in an RST diagnostic payload.  The "pen" parameter
+   MUST be omitted if a reason code from the IANA-maintained registry
    (Section 5.2) fits the reset case.
 
    Malformed RST diagnostic payload messages that include the magic
-   number MUST be silently ignored by the receiver.
+   cookie MUST be silently ignored by the receiver.
 
    A peer that receives a valid diagnostic payload may pass the reset
    reason information to the local application in addition to the
@@ -214,17 +215,21 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    an ACK was received from that peer while the connection is still in
    the LISTEN state (Section 3.10.7.2 of [I-D.ietf-tcpm-rfc793bis]).
 
+
+
+
+
+
+
+Boucadair & Reddy        Expires 21 October 2022                [Page 4]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
    19 3039 # unsigned(12345)
    A1    # map(1)
       01 # unsigned(1)
       02 # unsigned(2)
-
-
-
-Boucadair                Expires 14 October 2022                [Page 4]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
 
     Figure 2: An RST Diagnostic Payload with Reason Code (CBOR Encoding)
 
@@ -255,7 +260,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
         Figure 4: An RST Diagnostic Payload with Reason Description
                            (Diagnostic Notation)
 
-   An RST diagnostic payload may also be reset by an on-path service
+   An RST diagnostic payload may also be sent by an on-path service
    function.  For example, the following diagnostic payload is returned
    by a NAT upon expiry of the mapping entry to which the TCP connection
    is bound (Figure 5).
@@ -270,17 +275,16 @@ Internet-Draft           RST Diagnostic Payload               April 2022
       Figure 5: An RST Diagnostic Payload to Report Connection Timeout
                            (Diagnostic Notation)
 
-   Figure 6 illustrates the RST diagnostic payload that is returned by a
-   peer that resets a TCP connection for a reason code 1234 defined by a
-   vendor with the private enterprise number 32473.
 
 
-
-
-Boucadair                Expires 14 October 2022                [Page 5]
+Boucadair & Reddy        Expires 21 October 2022                [Page 5]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
+
+   Figure 6 illustrates the RST diagnostic payload that is returned by a
+   peer that resets a TCP connection for a reason code 1234 defined by a
+   vendor with the private enterprise number 32473.
 
    [
      12345,
@@ -323,6 +327,17 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    The assignment policy for this registry is "IETF Review" (Section 4.8
    of [RFC8126]).
 
+
+
+
+
+
+
+Boucadair & Reddy        Expires 21 October 2022                [Page 6]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
 5.2.  New Registry for TCP Failure Causes
 
    This document requests IANA to create a new subregistry entitled "TCP
@@ -330,13 +345,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    Parameters" registry [IANA-TCP].
 
    Values are taken from the 1-65535 range.
-
-
-
-Boucadair                Expires 14 October 2022                [Page 6]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
 
    The assignment policy for this registry is "Expert Review"
    (Section 4.5 of [RFC8126]).
@@ -381,74 +389,46 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
 
 
-
-
-
-
-
-
-
-
-Boucadair                Expires 14 October 2022                [Page 7]
+Boucadair & Reddy        Expires 21 October 2022                [Page 7]
 
 Internet-Draft           RST Diagnostic Payload               April 2022
 
 
-   +=======+===============================+===========================+
-   | Value | Description                   | Specification (if         |
-   |       |                               | available)                |
-   +=======+===============================+===========================+
-   | 1     | Data lost.  New data is       | Sections 3.6.1 and        |
-   |       | received after CLOSE is       | 3.10.7.1 of               |
-   |       | called                        | [I-D.ietf-tcpm-rfc793bis] |
-   +-------+-------------------------------+---------------------------+
-   | 2     | Still in LISTEN.              | Section 3.10.7.2 of       |
-   |       | Received ACK while the        | [I-D.ietf-tcpm-rfc793bis] |
-   |       | connection still in the       |                           |
-   |       | LISTEN state                  |                           |
-   +-------+-------------------------------+---------------------------+
-   | 3     | Malformed Message             | [ThisDocument]            |
-   +-------+-------------------------------+---------------------------+
-   | 4     | Not Authorized                | [ThisDocument]            |
-   +-------+-------------------------------+---------------------------+
-   | 5     | Resource Exceeded             | [ThisDocument]            |
-   +-------+-------------------------------+---------------------------+
-   | 6     | Network Failure.  This        | [ThisDocument]            |
-   |       | code can be used by           |                           |
-   |       | service functions such        |                           |
-   |       | as translators.               |                           |
-   +-------+-------------------------------+---------------------------+
-   | 7     | Connection Reset              | [ThisDocument]            |
-   |       | received from the peer.       |                           |
-   |       | This code can be used         |                           |
-   |       | by service functions          |                           |
-   |       | such as translators.          |                           |
-   +-------+-------------------------------+---------------------------+
-   | 8     | Destination                   | [ThisDocument]            |
-   |       | Unreachable.  This code       |                           |
-   |       | can be used by service        |                           |
-   |       | functions such as             |                           |
-   |       | translators.                  |                           |
-   +-------+-------------------------------+---------------------------+
-   | 9     | Connection Timeout.           | [ThisDocument]            |
-   |       | This code can be used         |                           |
-   |       | by service functions          |                           |
-   |       | such as translators.          |                           |
-   +-------+-------------------------------+---------------------------+
+    +=======+=============================+===========================+
+    | Value | Description                 | Specification (if         |
+    |       |                             | available)                |
+    +=======+=============================+===========================+
+    | 1     | Data lost.  New data is     | Sections 3.6.1 and        |
+    |       | received after CLOSE is     | 3.10.7.1 of               |
+    |       | called                      | [I-D.ietf-tcpm-rfc793bis] |
+    +-------+-----------------------------+---------------------------+
+    | 2     | Still in LISTEN.  Received  | Section 3.10.7.2 of       |
+    |       | ACK while the connection is | [I-D.ietf-tcpm-rfc793bis] |
+    |       | still in the LISTEN state   |                           |
+    +-------+-----------------------------+---------------------------+
+    | 3     | Illegal Option              | Section 3.1 of            |
+    |       |                             | [I-D.ietf-tcpm-rfc793bis] |
+    +-------+-----------------------------+---------------------------+
+    | 4     | Malformed Message           | [ThisDocument]            |
+    +-------+-----------------------------+---------------------------+
+    | 5     | Not Authorized              | [ThisDocument]            |
+    +-------+-----------------------------+---------------------------+
+    | 6     | Resource Exceeded           | [ThisDocument]            |
+    +-------+-----------------------------+---------------------------+
+    | 7     | Network Failure             | [ThisDocument]            |
+    +-------+-----------------------------+---------------------------+
+    | 8     | Connection Reset received   | [ThisDocument]            |
+    |       | from the peer               |                           |
+    +-------+-----------------------------+---------------------------+
+    | 9     | Destination Unreachable     | [ThisDocument]            |
+    +-------+-----------------------------+---------------------------+
+    | 10    | Connection Timeout.         | [ThisDocument]            |
+    +-------+-----------------------------+---------------------------+
 
                     Table 1: Initial TCP Failure Causes
 
-
-
-
-
-
-
-
-Boucadair                Expires 14 October 2022                [Page 8]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
+   Note that codes 5-10 can be used by service functions such as
+   translators.
 
 6.  Security Considerations
 
@@ -462,6 +442,13 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    information as part of the diagnostic payload (e.g., including a
    description such as "user X resets explicitly the connection" is not
    recommended).
+
+
+
+Boucadair & Reddy        Expires 21 October 2022                [Page 8]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
 
    The presence of vendor-specific reason codes (Section 3) may be used
    to fingerprint hosts.  Such a concern does not apply if the reason
@@ -496,15 +483,9 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-
-
-
-
-
-Boucadair                Expires 14 October 2022                [Page 9]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
+   [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
+              10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
+              2003, <https://www.rfc-editor.org/info/rfc3629>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -514,6 +495,16 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+
+
+
+
+
+Boucadair & Reddy        Expires 21 October 2022                [Page 9]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
@@ -551,17 +542,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               NATs (CGNs)", BCP 127, RFC 6888, DOI 10.17487/RFC6888,
               April 2013, <https://www.rfc-editor.org/info/rfc6888>.
 
-
-
-
-
-
-
-Boucadair                Expires 14 October 2022               [Page 10]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
-
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
@@ -573,7 +553,16 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               DOI 10.17487/RFC7857, April 2016,
               <https://www.rfc-editor.org/info/rfc7857>.
 
-Author's Address
+
+
+
+
+Boucadair & Reddy        Expires 21 October 2022               [Page 10]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
+Authors' Addresses
 
    Mohamed Boucadair
    Orange
@@ -582,6 +571,13 @@ Author's Address
    Email: mohamed.boucadair@orange.com
 
 
+   Tirumaleswar Reddy (editor)
+   Akamai
+   Embassy Golf Link Business Park
+   Bangalore 560071
+   Karnataka
+   India
+   Email: kondtir@gmail.com
 
 
 
@@ -613,4 +609,8 @@ Author's Address
 
 
 
-Boucadair                Expires 14 October 2022               [Page 11]
+
+
+
+
+Boucadair & Reddy        Expires 21 October 2022               [Page 11]
