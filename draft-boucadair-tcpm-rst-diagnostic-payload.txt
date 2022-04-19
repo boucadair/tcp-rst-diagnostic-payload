@@ -121,8 +121,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    However, the authoritative source to retrieve the full list of error
    codes is the IANA-maintained registry Section 5.2.
 
-   Unlike the approach
-
 2.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -162,6 +160,8 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
       Note to the RFC Editor: Please replace "12345" with the RFC number
       assigned to this document.
+
+
 
 
 

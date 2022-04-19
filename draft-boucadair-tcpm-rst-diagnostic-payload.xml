@@ -109,8 +109,6 @@
       target="initial"></xref>. However, the authoritative source to retrieve
       the full list of error codes is the IANA-maintained registry <xref
       target="reg"></xref>.</t>
-
-      <t>Unlike the approach </t>
     </section>
 
     <section anchor="notation" title="Terminology">
