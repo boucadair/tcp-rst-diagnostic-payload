@@ -140,7 +140,7 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    follows:
 
     ; This defines an array, the elements of which are to be used
-    ; in a CBOR Sequence:
+    ; in a CBOR Sequence. There is exactly one occurrence.
     diagnostic-payload = [magic-cookie, reason]
     ; Magic cookie to identify a payload that follows this specification
     magic-cookie = 12345
@@ -178,8 +178,8 @@ Internet-Draft           RST Diagnostic Payload               April 2022
       such as the "TCP Failure Causes" registry (Section 5.2).
 
    pen:  Includes a Private Enterprise Number
-      [Private-Enterprise-Numbers].  This parameter is included when the
-      reason code is not taken from the IANA-maintained registry
+      [Private-Enterprise-Numbers].  This parameter MAY be included when
+      the reason code is not taken from the IANA-maintained registry
       (Section 5.2), but from a vendor-specific registry.
 
    reason-description:  It includes a brief description of the reset
@@ -246,8 +246,8 @@ Internet-Draft           RST Diagnostic Payload               April 2022
       Figure 3: An RST Diagnostic Payload with Reason Code (Diagnostic
                                  Notation)
 
-   Figure 4 shows an example of RST diagnostic payload that includes a
-   free description to report a case that is not covered yet by the
+   Figure 4 shows an example of an RST diagnostic payload that includes
+   a free description to report a case that is not covered yet by the
    IANA-maintained registry (Section 5.2).
 
    [
@@ -438,10 +438,10 @@ Internet-Draft           RST Diagnostic Payload               April 2022
 
    In addition to these considerations, it is RECOMMENDED to control the
    size of acceptable diagnostic payload and keep it as brief as
-   possible.  Also, it is RECOMMENDED to avoid leaking privacy-related
-   information as part of the diagnostic payload (e.g., including a
-   description such as "user X resets explicitly the connection" is not
-   recommended).
+   possible.  The RECOMMENDED acceptable maximum size of diagnostic
+   payload is 255 octets.
+
+
 
 
 
@@ -450,11 +450,22 @@ Boucadair & Reddy        Expires 21 October 2022                [Page 8]
 Internet-Draft           RST Diagnostic Payload               April 2022
 
 
+   Also, it is RECOMMENDED to avoid leaking privacy-related information
+   as part of the diagnostic payload (e.g., including a description such
+   as "user X resets explicitly the connection" is not recommended).
+   The "reason-description" string, when present, should not include any
+   private information that an observer would not otherwise have access
+   to.
+
    The presence of vendor-specific reason codes (Section 3) may be used
    to fingerprint hosts.  Such a concern does not apply if the reason
    codes are taken from the IANA-maintained registry.  Implementers are,
    thus, encouraged to register new codes within IANA instead of
    maintaining specific registries.
+
+   The reason description, when present, is not intended to be displayed
+   to end users, but to be consumed by applications.  Such description
+   may carry a malicious message to mislead the end-user.
 
 7.  Acknowledgements
 
@@ -487,6 +498,14 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
               2003, <https://www.rfc-editor.org/info/rfc3629>.
 
+
+
+
+Boucadair & Reddy        Expires 21 October 2022                [Page 9]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -495,16 +514,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-
-
-
-Boucadair & Reddy        Expires 21 October 2022                [Page 9]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
@@ -542,6 +551,17 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               NATs (CGNs)", BCP 127, RFC 6888, DOI 10.17487/RFC6888,
               April 2013, <https://www.rfc-editor.org/info/rfc6888>.
 
+
+
+
+
+
+
+Boucadair & Reddy        Expires 21 October 2022               [Page 10]
+
+Internet-Draft           RST Diagnostic Payload               April 2022
+
+
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
@@ -552,15 +572,6 @@ Internet-Draft           RST Diagnostic Payload               April 2022
               (NAT) Behavioral Requirements", BCP 127, RFC 7857,
               DOI 10.17487/RFC7857, April 2016,
               <https://www.rfc-editor.org/info/rfc7857>.
-
-
-
-
-
-Boucadair & Reddy        Expires 21 October 2022               [Page 10]
-
-Internet-Draft           RST Diagnostic Payload               April 2022
-
 
 Authors' Addresses
 
@@ -578,17 +589,6 @@ Authors' Addresses
    Karnataka
    India
    Email: kondtir@gmail.com
-
-
-
-
-
-
-
-
-
-
-
 
 
 

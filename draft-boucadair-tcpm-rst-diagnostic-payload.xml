@@ -130,7 +130,7 @@
       follows:<figure anchor="sddl"
           title="Structure of the RST Diagnostic Payload">
           <artwork><![CDATA[   ; This defines an array, the elements of which are to be used
-   ; in a CBOR Sequence:
+   ; in a CBOR Sequence. There is exactly one occurrence. 
    diagnostic-payload = [magic-cookie, reason]
    ; Magic cookie to identify a payload that follows this specification
    magic-cookie = 12345
@@ -160,7 +160,7 @@
           target="reg"></xref>).</t>
 
           <t hangText="pen:">Includes a Private Enterprise Number <xref
-          target="Private-Enterprise-Numbers"></xref>. This parameter is
+          target="Private-Enterprise-Numbers"></xref>. This parameter MAY be
           included when the reason code is not taken from the IANA-maintained
           registry (<xref target="reg"></xref>), but from a vendor-specific
           registry.</t>
@@ -227,9 +227,10 @@ A1    # map(1)
 ]]></artwork>
         </figure></t>
 
-      <t><xref target="ex2"></xref> shows an example of RST diagnostic payload
-      that includes a free description to report a case that is not covered
-      yet by the IANA-maintained registry (<xref target="reg"></xref>).</t>
+      <t><xref target="ex2"></xref> shows an example of an RST diagnostic
+      payload that includes a free description to report a case that is not
+      covered yet by the IANA-maintained registry (<xref
+      target="reg"></xref>).</t>
 
       <t><figure anchor="ex2"
           title="An RST Diagnostic Payload with Reason Description (Diagnostic Notation)">
@@ -414,15 +415,25 @@ A1    # map(1)
 
       <t>In addition to these considerations, it is RECOMMENDED to control the
       size of acceptable diagnostic payload and keep it as brief as possible.
-      Also, it is RECOMMENDED to avoid leaking privacy-related information as
-      part of the diagnostic payload (e.g., including a description such as
-      "user X resets explicitly the connection" is not recommended).</t>
+      The RECOMMENDED acceptable maximum size of diagnostic payload is 255
+      octets. </t>
+
+      <t>Also, it is RECOMMENDED to avoid leaking privacy-related information
+      as part of the diagnostic payload (e.g., including a description such as
+      "user X resets explicitly the connection" is not recommended). The
+      "reason-description" string, when present, should not include any
+      private information that an observer would not otherwise have access
+      to.</t>
 
       <t>The presence of vendor-specific reason codes (<xref
       target="new"></xref>) may be used to fingerprint hosts. Such a concern
       does not apply if the reason codes are taken from the IANA-maintained
       registry. Implementers are, thus, encouraged to register new codes
       within IANA instead of maintaining specific registries.</t>
+
+      <t>The reason description, when present, is not intended to be displayed
+      to end users, but to be consumed by applications. Such description may
+      carry a malicious message to mislead the end-user. </t>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
