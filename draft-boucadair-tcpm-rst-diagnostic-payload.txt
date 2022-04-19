@@ -4,7 +4,7 @@
 
 tcpm                                                        M. Boucadair
 Internet-Draft                                                    Orange
-Intended status: Standards Track                           T. Reddy, Ed.
+Intended status: Standards Track                                T. Reddy
 Expires: 21 October 2022                                          Akamai
                                                            19 April 2022
 
@@ -571,7 +571,7 @@ Authors' Addresses
    Email: mohamed.boucadair@orange.com
 
 
-   Tirumaleswar Reddy (editor)
+   Tirumaleswar Reddy
    Akamai
    Embassy Golf Link Business Park
    Bangalore 560071
