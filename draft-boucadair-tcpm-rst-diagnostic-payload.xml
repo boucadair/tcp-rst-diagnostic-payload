@@ -36,17 +36,17 @@
     </author>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
-      <organization>Akamai</organization>
+      <organization>Nokia</organization>
 
       <address>
         <postal>
-          <street>Embassy Golf Link Business Park</street>
+          <street></street>
 
-          <city>Bangalore</city>
+          <city></city>
 
-          <region>Karnataka</region>
+          <region></region>
 
-          <code>560071</code>
+          <code></code>
 
           <country>India</country>
         </postal>
@@ -69,36 +69,40 @@
 
   <middle>
     <section anchor="introduction" title="Introduction">
-      <t>A TCP connection <xref target="I-D.ietf-tcpm-rfc793bis"></xref> can
-      be reset by a peer for various reasons, e.g., received data does not
-      correspond to an active connection. Also, a TCP connection can be reset
-      by an on-path service function (e.g., CGN <xref
-      target="RFC6888"></xref>, NAT64 <xref target="RFC6146"></xref>,
-      firewall) for several reasons. Typically, a NAT function can generate an
-      RST segment to notify the peers upon the expiry of the lifetime of the
+      <t>A TCP connection <xref target="RFC9293"></xref> can be reset by a
+      peer for various reasons, e.g., received data does not correspond to an
+      active connection. Also, a TCP connection can be reset by an on-path
+      service function (e.g., CGN <xref target="RFC6888"></xref>, NAT64 <xref
+      target="RFC6146"></xref>, or firewall) for several reasons. Typically, a
+      Network Address Translator (NAT) function can generate an RST segment to
+      notify the endpoints upon the expiry of the lifetime of the
       corresponding mapping entry or because an RST segment was received from
       a peer (Section 2.2 of <xref target="RFC7857"></xref>). A TCP connection
       can also be closed by a user or an application at any time. However, the
       peer that receives an RST segment does not have any hint about the
       reason that led to terminating the connection. Likewise, the application
       that relies upon such a TCP connection may not easily identify the
-      reason for a connection closure. Troubleshooting such events at the
+      reason for the connection closure. Troubleshooting such events at the
       remote side of the connection that receives the RST segment may not be
       trivial.</t>
 
       <t>This document fills this void by specifying a format of the
       diagnostic payload that is returned in an RST segment. Returning such
       data is consistent with the provision in Section 3.5.3 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref> for RST segments.</t>
+      target="RFC9293"></xref> for RST segments, especially: <list
+          style="empty">
+          <t>"TCP implementations SHOULD allow a received RST segment to
+          include data (SHLD-2)."</t>
+        </list></t>
 
       <t>This document does not change the conditions under which an RST
       segment is generated (Section 3.5.2 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref>).</t>
+      target="RFC9293"></xref>).</t>
 
       <t>The generic procedure for processing an RST segment is specified in
-      Section 3.5.3 of <xref target="I-D.ietf-tcpm-rfc793bis"></xref>. Only
-      the deviations from that procedure to insert and validate an enclosed
-      diagnostic payload is provided in <xref target="new"></xref>. <xref
+      Section 3.5.3 of <xref target="RFC9293"></xref>. Only the deviations
+      from that procedure to insert and validate an enclosed diagnostic
+      payload is provided in <xref target="new"></xref>. <xref
       target="examples"></xref> provides a set of examples to illustrate the
       use of TCP RST diagnostic payloads.</t>
 
@@ -109,17 +113,21 @@
       target="initial"></xref>. However, the authoritative source to retrieve
       the full list of error codes is the IANA-maintained registry <xref
       target="reg"></xref>.</t>
+
+      <t>Preliminary investigation based on some major CGN vendors revealed
+      that RSTs with data are not discarded and are translated according to
+      any matching mapping entry. </t>
     </section>
 
     <section anchor="notation" title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
       "OPTIONAL" in this document are to be interpreted as described in BCP 14
-      <xref target="RFC2119"></xref><xref target="RFC8174"></xref> when, and
+      <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when, and
       only when, they appear in all capitals, as shown here.</t>
 
       <t>This document makes use of the terms defined in Section 4 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref>.</t>
+      target="RFC9293"></xref>.</t>
     </section>
 
     <section anchor="new" title="RST Diagnostic Payload">
@@ -165,11 +173,11 @@
           registry (<xref target="reg"></xref>), but from a vendor-specific
           registry.</t>
 
-          <t hangText="reason-description:">It includes a brief description of
+          <t hangText="reason-description:">Includes a brief description of
           the reset reason encoded as UTF-8 <xref target="RFC3629"></xref>.
           This parameter SHOULD NOT be included if a reason code is supplied.
           This parameter is useful only for reset reasons that are not yet
-          registered or for application-specific reasons.</t>
+          registered or for application-specific reset reasons.</t>
         </list></t>
 
       <t>At least one of "reason-code" and "reason-description" parameters
@@ -183,10 +191,15 @@
       <t>A peer that receives a valid diagnostic payload may pass the reset
       reason information to the local application in addition to the
       information (MUST-12) described in Section 3.6 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref>. That information may also be
-      logged locally, unless a local policy specifies otherwise. How the
-      information is passed to an application and how it is stored locally is
-      implementation specific.</t>
+      target="RFC9293"></xref>. That information may also be logged locally,
+      unless a local policy specifies otherwise. How the information is passed
+      to an application and how it is stored locally is implementation
+      specific.</t>
+
+      <t>As per Section 3.6 of <xref target="RFC9293"></xref>, one or more RST
+      segments can be sent to reset a connection. Whether a TCP endpoint
+      elects to send more than one RST with only a subset of them that include
+      the diagnostic payload is implementation specific. </t>
     </section>
 
     <section anchor="examples" title="Some Examples">
@@ -197,14 +210,14 @@
       target="ex2"></xref>, <xref format="counter" target="ex3"></xref>, and
       <xref format="counter" target="ex4"></xref>.</t>
 
-      <t><xref target="ex1a"></xref> depicts an example of RST diagnostic
+      <t><xref target="ex1a"></xref> depicts an example of the RST diagnostic
       payload that is generated to inform the peer that the TCP connection is
       reset because an ACK was received from that peer while the connection is
       still in the LISTEN state (Section 3.10.7.2 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref>).</t>
+      target="RFC9293"></xref>).</t>
 
       <t><figure anchor="ex1a"
-          title="An RST Diagnostic Payload with Reason Code (CBOR Encoding)">
+          title="Example of an RST Diagnostic Payload with Reason Code (CBOR Encoding)">
           <artwork><![CDATA[19 3039 # unsigned(12345)
 A1    # map(1)
    01 # unsigned(1)
@@ -213,11 +226,11 @@ A1    # map(1)
         </figure></t>
 
       <t><xref target="ex1"></xref> depicts the same RST diagnostic payload as
-      the one shown in <xref target="ex1a"></xref> but following the
+      the one shown in <xref target="ex1a"></xref> but following the CBOR
       diagnostic notation.</t>
 
       <t><figure anchor="ex1"
-          title="An RST Diagnostic Payload with Reason Code (Diagnostic Notation)">
+          title="Example of an RST Diagnostic Payload with Reason Code (Diagnostic Notation)">
           <artwork><![CDATA[[
   12345,
   {
@@ -229,11 +242,11 @@ A1    # map(1)
 
       <t><xref target="ex2"></xref> shows an example of an RST diagnostic
       payload that includes a free description to report a case that is not
-      covered yet by the IANA-maintained registry (<xref
+      covered by an appropriate code from the IANA-maintained registry (<xref
       target="reg"></xref>).</t>
 
       <t><figure anchor="ex2"
-          title="An RST Diagnostic Payload with Reason Description (Diagnostic Notation)">
+          title="Example of an RST Diagnostic Payload with Reason Description (Diagnostic Notation)">
           <artwork><![CDATA[[
   12345,
   {
@@ -249,7 +262,7 @@ A1    # map(1)
       bound (<xref target="ex3"></xref>).</t>
 
       <t><figure anchor="ex3"
-          title="An RST Diagnostic Payload to Report Connection Timeout (Diagnostic Notation)">
+          title="Example of an RST Diagnostic Payload to Report Connection Timeout (Diagnostic Notation)">
           <artwork><![CDATA[[
   12345,
   {
@@ -265,7 +278,7 @@ A1    # map(1)
       32473.</t>
 
       <t><figure anchor="ex4"
-          title="An RST Diagnostic Payload to Report Vendor-Specific Reason Code (Diagnostic Notation)">
+          title="Example of an RST Diagnostic Payload to Report Vendor-Specific Reason Code (Diagnostic Notation)">
           <artwork><![CDATA[[
   12345,
   {
@@ -289,6 +302,11 @@ A1    # map(1)
         Protocol (TCP) Parameters" registry <xref
         target="IANA-TCP"></xref>.</t>
 
+        <t>The key value MUST be an integer in the 1-255 range.</t>
+
+        <t>The assignment policy for this registry is "IETF Review" (Section
+        4.8 of <xref target="RFC8126"></xref>).</t>
+
         <t>The structure of this subregistry and the initial values are
         provided below:</t>
 
@@ -304,11 +322,6 @@ A1    # map(1)
 +====================+======+===============+==============+
 ]]></artwork>
           </figure></t>
-
-        <t>The key value MUST be an integer in the 1-255 range.</t>
-
-        <t>The assignment policy for this registry is "IETF Review" (Section
-        4.8 of <xref target="RFC8126"></xref>).</t>
       </section>
 
       <section anchor="reg" title="New Registry for TCP Failure Causes">
@@ -342,22 +355,20 @@ A1    # map(1)
 
           <c>New data is received after CLOSE is called</c>
 
-          <c>Sections 3.6.1 and 3.10.7.1 of <xref
-          target="I-D.ietf-tcpm-rfc793bis"></xref></c>
+          <c>Sections 3.6.1 and 3.10.7.1 of <xref target="RFC9293"></xref></c>
 
           <c>2</c>
 
           <c>Received ACK while the connection is still in the LISTEN
           state</c>
 
-          <c>Section 3.10.7.2 of <xref
-          target="I-D.ietf-tcpm-rfc793bis"></xref></c>
+          <c>Section 3.10.7.2 of <xref target="RFC9293"></xref></c>
 
           <c>3</c>
 
           <c>Illegal Option</c>
 
-          <c>Section 3.1 of <xref target="I-D.ietf-tcpm-rfc793bis"></xref></c>
+          <c>Section 3.1 of <xref target="RFC9293"></xref></c>
 
           <c>4</c>
 
@@ -397,7 +408,7 @@ A1    # map(1)
 
           <c>10</c>
 
-          <c>Connection Timeout. </c>
+          <c>Connection Timeout.</c>
 
           <c>[ThisDocument]</c>
 
@@ -420,21 +431,21 @@ A1    # map(1)
           <c>Section 3.6 of <xref target="RFC8684"></xref></c>
         </texttable>
 
-        <t>Note that codes 6-10 can be used by service functions such as
-        translators.</t>
+        <t>Note that codes in the 6-10 range can be used by service functions
+        such as translators.</t>
       </section>
     </section>
 
     <section anchor="security" title="Security Considerations">
-      <t><xref target="I-D.ietf-tcpm-rfc793bis"></xref> discusses TCP-related
-      security considerations. RST-specific attacks and their mitigations are
-      discussed in Section 3.10.7.3 of <xref
-      target="I-D.ietf-tcpm-rfc793bis"></xref>.</t>
+      <t><xref target="RFC9293"></xref> discusses TCP-related security
+      considerations. In particular, RST-specific attacks and their
+      mitigations are discussed in Section 3.10.7.3 of <xref
+      target="RFC9293"></xref>.</t>
 
       <t>In addition to these considerations, it is RECOMMENDED to control the
       size of acceptable diagnostic payload and keep it as brief as possible.
       The RECOMMENDED acceptable maximum size of the RST diagnostic payload is
-      255 octets. </t>
+      255 octets.</t>
 
       <t>Also, it is RECOMMENDED to avoid leaking privacy-related information
       as part of the diagnostic payload (e.g., including a description such as
@@ -451,7 +462,7 @@ A1    # map(1)
 
       <t>The reason description, when present, is not intended to be displayed
       to end users, but to be consumed by applications. Such a description may
-      carry a malicious message to mislead the end-user. </t>
+      carry a malicious message to mislead the end-user.</t>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
@@ -479,7 +490,7 @@ A1    # map(1)
 
       <?rfc include='reference.RFC.3629'?>
 
-      <?rfc include='reference.I-D.ietf-tcpm-rfc793bis'?>
+      <?rfc include='reference.RFC.9293'?>
 
       <?rfc include='reference.RFC.8684'?>
 
