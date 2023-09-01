@@ -10,7 +10,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload-04"
+<rfc category="std" docName="draft-boucadair-tcpm-rst-diagnostic-payload-07"
      ipr="trust200902">
   <front>
     <title abbrev="RST Diagnostic Payload">TCP RST Diagnostic Payload</title>
@@ -72,19 +72,19 @@
       <t>A TCP connection <xref target="RFC9293"></xref> can be reset by a
       peer for various reasons, e.g., received data does not correspond to an
       active connection. Also, a TCP connection can be reset by an on-path
-      service function (e.g., CGN <xref target="RFC6888"></xref>, NAT64 <xref
-      target="RFC6146"></xref>, or firewall) for several reasons. Typically, a
-      Network Address Translator (NAT) function can generate an RST segment to
-      notify the endpoints upon the expiry of the lifetime of the
-      corresponding mapping entry or because an RST segment was received from
-      a peer (Section 2.2 of <xref target="RFC7857"></xref>). A TCP connection
-      can also be closed by a user or an application at any time. However, the
-      peer that receives an RST segment does not have any hint about the
-      reason that led to terminating the connection. Likewise, the application
-      that relies upon such a TCP connection may not easily identify the
-      reason for the connection closure. Troubleshooting such events at the
-      remote side of the connection that receives the RST segment may not be
-      trivial.</t>
+      service function (e.g., Carrier Grade NAT (CGN) <xref
+      target="RFC6888"></xref>, NAT64 <xref target="RFC6146"></xref>, or
+      firewall) for several reasons. Typically, a Network Address Translator
+      (NAT) function can generate an RST segment to notify an endpoint upon
+      the expiry of the lifetime of the corresponding mapping entry or because
+      an RST segment was received from a peer (Section 2.2 of <xref
+      target="RFC7857"></xref>). A TCP connection can also be closed by a user
+      or an application at any time. However, the peer that receives an RST
+      segment does not have any hint about the reason that led to terminating
+      the connection. Likewise, the application that relies upon such a TCP
+      connection may not easily identify the reason for the connection
+      closure. Troubleshooting such events at the remote side of the
+      connection that receives the RST segment may not be trivial.</t>
 
       <t>This document fills this void by specifying a format of the
       diagnostic payload that is returned in an RST segment. Returning such
@@ -101,10 +101,10 @@
 
       <t>The generic procedure for processing an RST segment is specified in
       Section 3.5.3 of <xref target="RFC9293"></xref>. Only the deviations
-      from that procedure to insert and validate an enclosed diagnostic
-      payload is provided in <xref target="new"></xref>. <xref
-      target="examples"></xref> provides a set of examples to illustrate the
-      use of TCP RST diagnostic payloads.</t>
+      from that procedure to insert and validate a diagnostic payload is
+      provided in <xref target="new"></xref>. <xref target="examples"></xref>
+      provides a set of examples to illustrate the use of TCP RST diagnostic
+      payloads.</t>
 
       <t>This document specifies the format and the overall approach to ease
       maintaining the list of codes while allowing for adding new codes as
@@ -116,7 +116,7 @@
 
       <t>Preliminary investigation based on some major CGN vendors revealed
       that RSTs with data are not discarded and are translated according to
-      any matching mapping entry. </t>
+      any matching mapping entry.</t>
     </section>
 
     <section anchor="notation" title="Terminology">
@@ -193,13 +193,13 @@
       information (MUST-12) described in Section 3.6 of <xref
       target="RFC9293"></xref>. That information may also be logged locally,
       unless a local policy specifies otherwise. How the information is passed
-      to an application and how it is stored locally is implementation
-      specific.</t>
+      to an application and how it is stored locally is
+      implementation-specific.</t>
 
       <t>As per Section 3.6 of <xref target="RFC9293"></xref>, one or more RST
       segments can be sent to reset a connection. Whether a TCP endpoint
       elects to send more than one RST with only a subset of them that include
-      the diagnostic payload is implementation specific. </t>
+      the diagnostic payload is implementation-specific.</t>
     </section>
 
     <section anchor="examples" title="Some Examples">
@@ -210,7 +210,7 @@
       target="ex2"></xref>, <xref format="counter" target="ex3"></xref>, and
       <xref format="counter" target="ex4"></xref>.</t>
 
-      <t><xref target="ex1a"></xref> depicts an example of the RST diagnostic
+      <t><xref target="ex1a"></xref> depicts an example of an RST diagnostic
       payload that is generated to inform the peer that the TCP connection is
       reset because an ACK was received from that peer while the connection is
       still in the LISTEN state (Section 3.10.7.2 of <xref
@@ -258,8 +258,8 @@ A1    # map(1)
 
       <t>An RST diagnostic payload may also be sent by an on-path service
       function. For example, the following diagnostic payload is returned by a
-      NAT upon expiry of the mapping entry to which the TCP connection is
-      bound (<xref target="ex3"></xref>).</t>
+      NAT function upon expiry of the mapping entry to which the TCP
+      connection is bound (<xref target="ex3"></xref>).</t>
 
       <t><figure anchor="ex3"
           title="Example of an RST Diagnostic Payload to Report Connection Timeout (Diagnostic Notation)">
@@ -272,10 +272,9 @@ A1    # map(1)
 ]]></artwork>
         </figure></t>
 
-      <t><xref target="ex4"></xref> illustrates the RST diagnostic payload
-      that is returned by a peer that resets a TCP connection for a reason
-      code 1234 defined by a vendor with the private enterprise number
-      32473.</t>
+      <t><xref target="ex4"></xref> illustrates an RST diagnostic payload that
+      is returned by a peer that resets a TCP connection for a reason code
+      1234 defined by a vendor with the private enterprise number 32473.</t>
 
       <t><figure anchor="ex4"
           title="Example of an RST Diagnostic Payload to Report Vendor-Specific Reason Code (Diagnostic Notation)">
@@ -297,10 +296,9 @@ A1    # map(1)
       <t></t>
 
       <section anchor="map" title="RST Diagnostic Payload CBOR Key Values">
-        <t>IANA is requested to create a new subregistry titled "RST
-        Diagnostic Payload CBOR Key Values" under the "Transmission Control
-        Protocol (TCP) Parameters" registry <xref
-        target="IANA-TCP"></xref>.</t>
+        <t>IANA is requested to create a new registry titled "RST Diagnostic
+        Payload CBOR Key Values" under the "Transmission Control Protocol
+        (TCP) Parameters" registry group <xref target="IANA-TCP"></xref>.</t>
 
         <t>The key value MUST be an integer in the 1-255 range.</t>
 
@@ -325,9 +323,9 @@ A1    # map(1)
       </section>
 
       <section anchor="reg" title="New Registry for TCP Failure Causes">
-        <t>This document requests IANA to create a new subregistry entitled
-        "TCP Failure Causes" under the "Transmission Control Protocol (TCP)
-        Parameters" registry <xref target="IANA-TCP"></xref>.</t>
+        <t>This document requests IANA to create a new registry entitled "TCP
+        Failure Causes" under the "Transmission Control Protocol (TCP)
+        Parameters" registry group <xref target="IANA-TCP"></xref>.</t>
 
         <t>Values are taken from the 1-65535 range.</t>
 
@@ -342,7 +340,8 @@ A1    # map(1)
         no permanent and readily available public specification is
         available.</t>
 
-        <t>The registry is initially populated with the following values:</t>
+        <t>The registry is initially populated with the values listed in <xref
+        target="initial"></xref>.</t>
 
         <texttable anchor="initial" title="Initial TCP Failure Causes">
           <ttcol>Value</ttcol>
@@ -493,6 +492,18 @@ A1    # map(1)
       <?rfc include='reference.RFC.9293'?>
 
       <?rfc include='reference.RFC.8684'?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.6888'?>
+
+      <?rfc include='reference.RFC.7857'?>
+
+      <?rfc include='reference.RFC.6146'?>
+
+      <?rfc include='reference.RFC.5612'?>
+
+      <?rfc include='reference.RFC.7252'?>
 
       <reference anchor="Private-Enterprise-Numbers"
                  target="https://www.iana.org/assignments/enterprise-numbers">
@@ -506,18 +517,6 @@ A1    # map(1)
           <date day="04" month="May" year="2020" />
         </front>
       </reference>
-    </references>
-
-    <references title="Informative References">
-      <?rfc include='reference.RFC.6888'?>
-
-      <?rfc include='reference.RFC.7857'?>
-
-      <?rfc include='reference.RFC.6146'?>
-
-      <?rfc include='reference.RFC.5612'?>
-
-      <?rfc include='reference.RFC.7252'?>
 
       <reference anchor="IANA-TCP"
                  target="https://www.iana.org/assignments/tcp-parameters/tcp- parameters.xhtml">
