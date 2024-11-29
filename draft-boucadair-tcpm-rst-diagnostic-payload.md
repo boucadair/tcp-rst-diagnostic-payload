@@ -84,8 +84,8 @@ informative:
 
    The generic procedure for processing an RST segment is specified in
    {{Section 3.5.3 of !RFC9293}}.  Only the deviations from that procedure
-   to insert and validate a diagnostic payload is provided in Section 3.
-   Section 4 provides a set of examples to illustrate the use of TCP RST
+   to insert and validate a diagnostic payload is provided in {{payload}}.
+   {{examples}} provides a set of examples to illustrate the use of TCP RST
    diagnostic payloads.
 
    This document specifies the format and the overall approach to ease
@@ -93,7 +93,7 @@ informative:
    needed in the future and accommodating any existing vendor-specific
    codes.  An initial version of error codes is available in Table 2.
    However, the authoritative source to retrieve the full list of error
-   codes is the IANA-maintained registry Section 5.2.
+   codes is the IANA-maintained registry ({{causes}}).
 
    Preliminary investigation based on some major CGN vendors revealed
    that RSTs with data are not discarded and are translated according to
@@ -105,7 +105,7 @@ informative:
 
    This document makes use of the terms defined in {{Section 4 of !RFC9293}}.
 
-#  RST Diagnostic Payload
+#  RST Diagnostic Payload {#payload}
 
    The RST diagnostic payload MUST be encoded using Concise Binary
    Object Representation (CBOR) Sequence {{!RFC8742}}.  The Concise Data
@@ -136,18 +136,18 @@ informative:
    > assigned to this document.
 
    All parameters in the reason component of an RST diagnostic payload
-   are mapped to their CBOR key values as specified in Section 5.1.  The
+   are mapped to their CBOR key values as specified in {{cbor}}.  The
    description of these parameters is as follows:
 
    reason-code:
    :  This parameter takes a value from an available registry
-      such as the "TCP Failure Causes" registry (Section 5.2).
+      such as the "TCP Failure Causes" registry ({{causes}}).
 
    pen:
    :  Includes a Private Enterprise Number
       [Private-Enterprise-Numbers].  This parameter MAY be included when
       the reason code is not taken from the IANA-maintained registry
-      (Section 5.2), but from a vendor-specific registry.
+      ({{causes}}), but from a vendor-specific registry.
 
    reason-description:
    :  Includes a brief description of the reset reason
@@ -159,7 +159,7 @@ informative:
    At least one of "reason-code" and "reason-description" parameters
    MUST be included in an RST diagnostic payload.  The "pen" parameter
    MUST be omitted if a reason code from the IANA-maintained registry
-   (Section 5.2) fits the reset case.
+   ({{causes}}) fits the reset case.
 
    Malformed RST diagnostic payload messages that include the magic
    cookie MUST be silently ignored by the receiver.
@@ -176,11 +176,11 @@ informative:
    than one RST with only a subset of them that include the diagnostic
    payload is implementation-specific.
 
-#  Some Examples
+#  Some Examples {#examples}
 
    To ease readability, the CBOR diagnostic notation ({{Section 8 of !RFC8949}})
    with the parameter names rather than their CBOR key values
-   in Section 5.1 is used in Figures 3, 4, 5, and 6.
+   in {{cbor}} is used in Figures 3, 4, 5, and 6.
 
    {{fig-2}} depicts an example of an RST diagnostic payload that is
    generated to inform the peer that the TCP connection is reset because
@@ -210,7 +210,7 @@ informative:
 
    {{fig-4}} shows an example of an RST diagnostic payload that includes
    a free description to report a case that is not covered by an
-   appropriate code from the IANA-maintained registry (Section 5.2).
+   appropriate code from the IANA-maintained registry ({{causes}}).
 
 ~~~~ CDDL
    [
@@ -257,7 +257,7 @@ informative:
 
 # IANA Considerations
 
-##  RST Diagnostic Payload CBOR Key Values
+##  RST Diagnostic Payload CBOR Key Values {#cbor}
 
    IANA is requested to create a new registry titled "RST Diagnostic
    Payload CBOR Key Values" under the "Transmission Control Protocol
@@ -278,7 +278,7 @@ informative:
 | reason-description |   3      | 3 text string                |[ThisDocument]|
 {: #sub title='Initial CBOR Keys'}
 
-##  New Registry for TCP Failure Causes
+##  New Registry for TCP Failure Causes {#causes}
 
    This document requests IANA to create a new registry entitled "TCP
    Failure Causes" under the "Transmission Control Protocol (TCP)
