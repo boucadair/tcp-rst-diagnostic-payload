@@ -309,7 +309,7 @@ informative:
  |:-----:|:---------------------------------------------------------------|:-------------------------------------------|
  | 1     | Illegal Option                                                 | {{Section 3.1 of !RFC9293}}                |
  | 2     | New data is received after CLOSE is called                     | Sections 3.6.1 and  3.10.7.1 of [RFC9293]  |
- | 3     | ABORT Process                                                  | Section 3.10.5 of [RFC9293]                |
+ | 3     | ABORT Process                                                  | {{Section 3.10.5 of !RFC9293}}                |
  | 4     | Received ACK while the connection is still in the LISTEN state | {{Section 3.10.7.2 of !RFC9293}}           |
  | 5     | Malformed Message                                              | [ThisDocument]                             |
  | 6     | Not Authorized                                                 | [ThisDocument]                             |
