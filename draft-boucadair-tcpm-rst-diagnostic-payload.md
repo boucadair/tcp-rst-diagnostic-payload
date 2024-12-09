@@ -317,7 +317,7 @@ informative:
  | 8     | Network Failure                                                | [ThisDocument]                             |
  | 9     | Reset received from he peer                                    | [ThisDocument]                             |
  | 10    | Destination Unreachable                                        | [ThisDocument]                             |
- | 12    | Connection Timeout                                             | [ThisDocument]                             |
+ | 11    | Connection Timeout                                             | [ThisDocument]                             |
  | 12    | Too much outstanding data                                      | {{Section 3.6 of !RFC8684}}                |
  | 13    | Unacceptable performance                                       | {{Section 3.6 of !RFC8684}}                |
  | 14    | Middlebox interference                                         | {{Section 3.6 of !RFC8684}}                |
