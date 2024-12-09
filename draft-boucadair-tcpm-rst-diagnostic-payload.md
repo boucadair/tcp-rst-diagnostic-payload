@@ -27,6 +27,11 @@ author:
     country: India
     email: kondtir@gmail.com
 
+ -
+    fullname: Jason Xing
+    organization: Tencent
+    email: kerneljasonxing@gmail.com
+
 
 contributor:
 
