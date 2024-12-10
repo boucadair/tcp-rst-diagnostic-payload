@@ -312,16 +312,17 @@ informative:
  | 3     | New data is received after CLOSE is called                     | Sections 3.6.1 and  3.10.7.1 of {{!RFC9293}}  |
  | 4     | ABORT Process                                                  | {{Section 3.10.5 of !RFC9293}}             |
  | 5     | Unexpected ACK received by non-synchronized state connection   | {{Section 3.10.7 of !RFC9293}}             |
- | 6     | Malformed Message                                              | [ThisDocument]                             |
- | 7     | Not Authorized                                                 | [ThisDocument]                             |
- | 8     | Resource Exceeded                                              | [ThisDocument]                             |
- | 9     | Network Failure                                                | [ThisDocument]                             |
- | 10    | Reset received from he peer                                    | [ThisDocument]                             |
- | 11    | Destination Unreachable                                        | [ThisDocument]                             |
- | 12    | Connection Timeout                                             | [ThisDocument]                             |
- | 13    | Too much outstanding data                                      | {{Section 3.6 of !RFC8684}}                |
- | 14    | Unacceptable performance                                       | {{Section 3.6 of !RFC8684}}                |
- | 15    | Middlebox interference                                         | {{Section 3.6 of !RFC8684}}                |
+ | 6     | Unexpected security compartment                                | {{Section A.1 of !RFC9293}}                |
+ | 7     | Malformed Message                                              | [ThisDocument]                             |
+ | 8     | Not Authorized                                                 | [ThisDocument]                             |
+ | 9     | Resource Exceeded                                              | [ThisDocument]                             |
+ | 10    | Network Failure                                                | [ThisDocument]                             |
+ | 11    | Reset received from he peer                                    | [ThisDocument]                             |
+ | 12    | Destination Unreachable                                        | [ThisDocument]                             |
+ | 13    | Connection Timeout                                             | [ThisDocument]                             |
+ | 14    | Too much outstanding data                                      | {{Section 3.6 of !RFC8684}}                |
+ | 15    | Unacceptable performance                                       | {{Section 3.6 of !RFC8684}}                |
+ | 16    | Middlebox interference                                         | {{Section 3.6 of !RFC8684}}                |
  {: #initial title='Initial TCP Failure Causes'}
 
    Note that codes in the 6-10 range can be used by service functions
