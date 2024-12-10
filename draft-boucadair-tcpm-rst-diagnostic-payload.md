@@ -311,7 +311,7 @@ informative:
  | 2     | Desynchronized state                                           | {{Section 3.5.1 of !RFC9293}}              |
  | 3     | New data is received after CLOSE is called                     | Sections 3.6.1 and  3.10.7.1 of {{!RFC9293}}  |
  | 4     | ABORT Process                                                  | {{Section 3.10.5 of !RFC9293}}             |
- | 5     | Received ACK while the connection is still in the LISTEN state | {{Section 3.10.7.2 of !RFC9293}}           |
+ | 5     | Unexpected ACK received by non-synchronized state connection   | {{Section 3.10.7 of !RFC9293}}             |
  | 6     | Malformed Message                                              | [ThisDocument]                             |
  | 7     | Not Authorized                                                 | [ThisDocument]                             |
  | 8     | Resource Exceeded                                              | [ThisDocument]                             |
