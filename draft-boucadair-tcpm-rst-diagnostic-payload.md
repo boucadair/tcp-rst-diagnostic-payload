@@ -326,7 +326,7 @@ informative:
  | 17    | Middlebox interference                                         | {{Section 3.6 of !RFC8684}}                |
  {: #initial title='Initial TCP Failure Causes'}
 
-   Note that codes in the 6-10 range can be used by service functions
+   Note that codes in the 8-14 range can be used by service functions
    such as translators.
 
 
