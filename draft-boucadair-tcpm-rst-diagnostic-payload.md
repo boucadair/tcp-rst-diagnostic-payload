@@ -308,22 +308,25 @@ informative:
  | Value | Description                                                    | Specification (if available)               |
  |:-----:|:---------------------------------------------------------------|:-------------------------------------------|
  | 1     | Illegal Option                                                 | {{Section 3.1 of !RFC9293}}                |
- | 2     | New data is received after CLOSE is called                     | Sections 3.6.1 and  3.10.7.1 of {{!RFC9293}}  |
- | 3     | ABORT Process                                                  | {{Section 3.10.5 of !RFC9293}}                |
- | 4     | Received ACK while the connection is still in the LISTEN state | {{Section 3.10.7.2 of !RFC9293}}           |
- | 5     | Malformed Message                                              | [ThisDocument]                             |
- | 6     | Not Authorized                                                 | [ThisDocument]                             |
- | 7     | Resource Exceeded                                              | [ThisDocument]                             |
- | 8     | Network Failure                                                | [ThisDocument]                             |
- | 9     | Reset received from he peer                                    | [ThisDocument]                             |
- | 10    | Destination Unreachable                                        | [ThisDocument]                             |
- | 11    | Connection Timeout                                             | [ThisDocument]                             |
- | 12    | Too much outstanding data                                      | {{Section 3.6 of !RFC8684}}                |
- | 13    | Unacceptable performance                                       | {{Section 3.6 of !RFC8684}}                |
- | 14    | Middlebox interference                                         | {{Section 3.6 of !RFC8684}}                |
+ | 2     | Desynchronized state                                           | {{Section 3.5.1 of !RFC9293}}              |
+ | 3     | New data is received after CLOSE is called                     | Sections 3.6.1 and  3.10.7.1 of {{!RFC9293}}  |
+ | 4     | ABORT Process                                                  | {{Section 3.10.5 of !RFC9293}}             |
+ | 5     | Unexpected ACK received by non-synchronized state connection   | {{Section 3.10.7 of !RFC9293}}             |
+ | 6     | Unexpected SYN in the window                                   | {{Section 3.10.7 of !RFC9293}}             |
+ | 7     | Unexpected security compartment                                | {{Section A.1 of !RFC9293}}                |
+ | 8     | Malformed Message                                              | [ThisDocument]                             |
+ | 9     | Not Authorized                                                 | [ThisDocument]                             |
+ | 10    | Resource Exceeded                                              | [ThisDocument]                             |
+ | 11    | Network Failure                                                | [ThisDocument]                             |
+ | 12    | Reset received from he peer                                    | [ThisDocument]                             |
+ | 13    | Destination Unreachable                                        | [ThisDocument]                             |
+ | 14    | Connection Timeout                                             | [ThisDocument]                             |
+ | 15    | Too much outstanding data                                      | {{Section 3.6 of !RFC8684}}                |
+ | 16    | Unacceptable performance                                       | {{Section 3.6 of !RFC8684}}                |
+ | 17    | Middlebox interference                                         | {{Section 3.6 of !RFC8684}}                |
  {: #initial title='Initial TCP Failure Causes'}
 
-   Note that codes in the 6-10 range can be used by service functions
+   Note that codes in the 8-14 range can be used by service functions (Carrier Grade NAT (CGN), firewall, proxy, etc.).
    such as translators.
 
 
