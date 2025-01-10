@@ -118,17 +118,21 @@ informative:
    shown in {{cddl}}.
 
 ~~~~ CDDL
-    ; This defines an array, the elements of which are to be used
-    ; in a CBOR Sequence. There is exactly one occurrence.
-    diagnostic-payload = [magic-cookie, reason]
-    ; Magic cookie to identify a payload that follows this specification
-    magic-cookie = 12345
-    ; Reset reason details:
-    reason= {
-      ? reason-code: uint,
-      ? pen:uint,
-      ? reason-description: tstr,
-    }
+; This defines an array, the elements of which are to be used
+; in a CBOR Sequence. There is exactly one occurrence.
+diagnostic-payload = [magic-cookie, reason]
+; Magic cookie to identify a payload that follows this specification
+magic-cookie = 12345
+; Reset reason details:
+reason= {
+  ? reason-code: uint,
+  ? pen:uint,
+  ? reason-description: tstr,
+}
+; Map Keys
+reason-code = 1
+pen = 2
+reason-description = 3
 ~~~~
 {: #cddl title='Structure of the RST Diagnostic Payload'}
 
@@ -203,11 +207,11 @@ informative:
    {{fig-3}} depicts the same RST diagnostic payload as the one shown in
    {{fig-2}} but following the CBOR diagnostic notation.
 
-~~~~ CDDL
+~~~~ CBOR
    [
      12345,
      {
-       "reason-code": 2
+       1: 2
      }
    ]
 ~~~~
@@ -217,11 +221,11 @@ informative:
    a free description to report a case that is not covered by an
    appropriate code from the IANA-maintained registry ({{causes}}).
 
-~~~~ CDDL
+~~~~ CBOR
    [
      12345,
      {
-       "reason-description": "brief human-readable description"
+       3: "brief human-readable description"
      }
    ]
 ~~~~
@@ -232,11 +236,11 @@ informative:
    by a NAT function upon expiry of the mapping entry to which the TCP
    connection is bound ({{fig-5}}).
 
-~~~~ CDDL
+~~~~ CBOR
    [
      12345,
      {
-       "reason-code": 8
+       1: 8
      }
    ]
 ~~~~
@@ -246,12 +250,12 @@ informative:
    peer that resets a TCP connection for a reason code 1234 defined by a
    vendor with the private enterprise number 32473.
 
-~~~~ CDDL
+~~~~ CBOR
    [
      12345,
      {
-       "reason-code": 1234,
-       "pen": 32473
+       1: 1234,
+       2: 32473
      }
    ]
 ~~~~
